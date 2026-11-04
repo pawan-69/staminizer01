@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#090d16">
   <title>Staminizer</title>
   <style>
-   
     :root {
       --bg-dark: #090d16;
       --card-bg: #111827;
@@ -29,6 +29,7 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
@@ -40,13 +41,24 @@
       flex-direction: column;
       justify-content: space-between;
       -webkit-font-smoothing: antialiased;
+      padding-bottom: 76px; /* Space for Android sticky bottom bar */
+    }
+
+    @media (min-width: 900px) {
+      body {
+        padding-bottom: 0;
+      }
     }
 
     /* Scrollbars */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: #070a10; }
     ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #e11d48; }
+
+    /* Hide scrollbar for sleek horizontal ribbons on Android */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
     /* SVG Utility */
     .icon {
@@ -65,63 +77,99 @@
       position: sticky;
       top: 0;
       z-index: 40;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
     }
     .header-inner {
       max-width: 1360px;
       margin: 0 auto;
-      padding: 0.75rem 1rem;
+      padding: 0.65rem 0.85rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.75rem;
-      flex-wrap: wrap;
+      gap: 0.6rem;
     }
     .brand-wrap {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.65rem;
+      min-width: 0;
+      flex: 1;
     }
     .brand-logo {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 10px;
       background: linear-gradient(135deg, #e11d48, #f59e0b);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
-      box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.35);
+      flex-shrink: 0;
+    }
+    .brand-text-col {
+      min-width: 0;
+      flex: 1;
+    }
+    .brand-title-row {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
     }
     .brand-title {
-      font-size: 1.4rem;
+      font-size: 1.25rem;
       font-weight: 900;
       letter-spacing: 0.06em;
       line-height: 1.1;
       text-transform: uppercase;
     }
+    .folder-pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 0.62rem;
+      font-weight: 800;
+      font-family: monospace;
+      background: rgba(16, 185, 129, 0.14);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      padding: 2px 6px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
     .brand-sub {
-      font-size: 0.75rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      margin-top: 2px;
+      cursor: pointer;
+    }
+    .brand-sub.expanded {
+      white-space: normal;
+      line-height: 1.3;
     }
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
+      gap: 0.45rem;
+      flex-shrink: 0;
     }
     .phone-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      padding: 0.45rem 0.8rem;
-      background: rgba(30, 41, 59, 0.8);
+      gap: 0.35rem;
+      padding: 0.45rem 0.65rem;
+      background: rgba(30, 41, 59, 0.9);
       border: 1px solid var(--border-color);
       border-radius: 8px;
       color: #cbd5e1;
       text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 600;
+      font-size: 0.75rem;
+      font-weight: 700;
       transition: all 0.2s ease;
     }
     .phone-badge:hover {
@@ -131,7 +179,24 @@
     .phone-badge span {
       color: #fda4af;
       font-family: monospace;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
+    }
+    .desktop-only-actions {
+      display: none;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    @media (min-width: 900px) {
+      .desktop-only-actions {
+        display: flex;
+      }
+      .brand-title {
+        font-size: 1.4rem;
+      }
+      .brand-sub {
+        font-size: 0.73rem;
+        white-space: normal;
+      }
     }
 
     /* Buttons */
@@ -139,10 +204,10 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.45rem;
-      padding: 0.5rem 0.9rem;
+      gap: 0.4rem;
+      padding: 0.5rem 0.85rem;
       border-radius: 8px;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 700;
       cursor: pointer;
       border: 1px solid transparent;
@@ -150,6 +215,7 @@
       text-transform: uppercase;
       letter-spacing: 0.03em;
       user-select: none;
+      white-space: nowrap;
     }
     .btn-secondary {
       background: #1e293b;
@@ -162,7 +228,7 @@
     }
     .btn-amber {
       background: rgba(245, 158, 11, 0.15);
-      border-color: rgba(245, 158, 11, 0.4);
+      border-color: rgba(245, 158, 11, 0.45);
       color: #fcd34d;
     }
     .btn-amber:hover {
@@ -170,10 +236,20 @@
       border-color: #f59e0b;
       color: #fff;
     }
+    .btn-emerald {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.45);
+      color: #6ee7b7;
+    }
+    .btn-emerald:hover {
+      background: rgba(16, 185, 129, 0.28);
+      border-color: #10b981;
+      color: #fff;
+    }
     .btn-primary {
       background: linear-gradient(135deg, #e11d48, #be123c);
       color: #fff;
-      box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.35);
     }
     .btn-primary:hover {
       filter: brightness(1.1);
@@ -186,82 +262,155 @@
     main {
       max-width: 1360px;
       margin: 0 auto;
-      padding: 1.25rem 1rem;
+      padding: 0.75rem 0.75rem 1.5rem;
       width: 100%;
       flex-grow: 1;
     }
+    @media (min-width: 768px) {
+      main {
+        padding: 1.25rem 1rem;
+      }
+    }
 
-    /* Day Selector Card */
+    /* Quick Member Mini-Banner (Android Top Bar Context) */
+    .member-quick-bar {
+      background: linear-gradient(90deg, rgba(17, 24, 39, 0.95), rgba(22, 32, 50, 0.95));
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.55rem 0.8rem;
+      margin-bottom: 0.65rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .member-quick-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      min-width: 0;
+    }
+    .member-avatar-pill {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(244, 63, 94, 0.2);
+      border: 1px solid rgba(244, 63, 94, 0.45);
+      color: #fda4af;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.7rem;
+      flex-shrink: 0;
+    }
+    .member-quick-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .mini-action-pill {
+      background: #090e17;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.28rem 0.6rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .mini-action-pill:hover {
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    /* Day Selector Card - Sleek Horizontal Swipe on Android, 7-Grid on Desktop */
     .day-selector-card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 0.75rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      padding: 0.6rem 0.7rem;
+      margin-bottom: 0.65rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
     }
     .day-selector-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 0.5rem;
-      padding: 0 0.25rem;
-      font-size: 0.75rem;
-      font-weight: 700;
+      margin-bottom: 0.45rem;
+      font-size: 0.7rem;
+      font-weight: 800;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
     .day-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.5rem;
+      display: flex;
+      gap: 0.45rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 2px;
     }
-    @media(min-width: 640px) {
-      .day-grid { grid-template-columns: repeat(4, 1fr); }
-    }
-    @media(min-width: 900px) {
-      .day-grid { grid-template-columns: repeat(7, 1fr); }
+    @media (min-width: 900px) {
+      .day-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        overflow-x: visible;
+      }
     }
 
     .day-tab {
       background: #090e17;
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 0.6rem 0.4rem;
+      padding: 0.5rem 0.75rem;
+      min-width: 92px;
+      flex-shrink: 0;
+      scroll-snap-align: start;
       cursor: pointer;
       text-align: center;
       position: relative;
-      transition: all 0.2s ease;
+      transition: all 0.18s ease;
       color: #cbd5e1;
+    }
+    @media (min-width: 900px) {
+      .day-tab {
+        min-width: 0;
+        padding: 0.6rem 0.4rem;
+      }
     }
     .day-tab:hover {
       background: #162238;
       border-color: #3b82f6;
     }
     .day-tab.active {
-      background: #e11d48;
+      background: linear-gradient(135deg, #e11d48, #be123c);
       border-color: #fb7185;
       color: #ffffff;
-      box-shadow: 0 4px 14px rgba(225, 29, 72, 0.45);
+      box-shadow: 0 3px 12px rgba(225, 29, 72, 0.4);
     }
     .day-tab-name {
-      font-size: 0.85rem;
+      font-size: 0.78rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       display: block;
     }
     .day-tab-count {
-      font-size: 0.7rem;
-      opacity: 0.85;
+      font-size: 0.66rem;
+      opacity: 0.88;
       display: block;
-      margin-top: 2px;
+      margin-top: 1px;
     }
     .day-tab .active-dot {
       position: absolute;
-      top: 6px;
-      right: 6px;
+      top: 5px;
+      right: 5px;
       width: 6px;
       height: 6px;
       border-radius: 50%;
@@ -271,43 +420,32 @@
       background: #ffffff;
     }
 
-    /* Filter & Body Part Chooser Bar */
+    /* Filter & Search Bar - Compact & De-cluttered */
     .filter-card {
       background: #0f172a;
       border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 0.85rem 1rem;
-      margin-bottom: 1.25rem;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      border-radius: 12px;
+      padding: 0.65rem 0.75rem;
+      margin-bottom: 0.65rem;
     }
-    .filter-title-row {
+    .filter-controls-top {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.6rem;
-      gap: 0.75rem;
+      gap: 0.5rem;
+      margin-bottom: 0.55rem;
       flex-wrap: wrap;
-    }
-    .filter-label {
-      font-size: 0.75rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #94a3b8;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
     .search-input-wrap {
       position: relative;
-      min-width: 200px;
+      flex: 1;
+      min-width: 160px;
     }
     .search-input {
       background: #090e17;
       border: 1px solid #334155;
-      border-radius: 20px;
-      padding: 0.35rem 0.75rem 0.35rem 2rem;
-      font-size: 0.75rem;
+      border-radius: 8px;
+      padding: 0.42rem 1.8rem 0.42rem 2rem;
+      font-size: 0.78rem;
       color: #fff;
       outline: none;
       width: 100%;
@@ -321,30 +459,75 @@
       left: 0.65rem;
       top: 50%;
       transform: translateY(-50%);
-      width: 12px;
-      height: 12px;
+      width: 13px;
+      height: 13px;
       color: #64748b;
       pointer-events: none;
     }
+    .clear-search-btn {
+      position: absolute;
+      right: 0.45rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      display: none;
+      padding: 2px;
+    }
+    .active-only-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #090e17;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      padding: 0.4rem 0.65rem;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+    .active-only-toggle.on {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: #10b981;
+      color: #34d399;
+    }
+
+    /* Horizontal Swipeable Filter Chips on Mobile */
     .filter-chip-container {
       display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
+      gap: 0.4rem;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scroll-snap-type: x mandatory;
+    }
+    @media (min-width: 900px) {
+      .filter-chip-container {
+        flex-wrap: wrap;
+        overflow-x: visible;
+      }
     }
     .filter-chip {
       background: #090e17;
       border: 1px solid var(--border-color);
       color: #94a3b8;
-      padding: 0.35rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 18px;
+      font-size: 0.72rem;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       transition: all 0.15s ease;
       user-select: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      scroll-snap-align: start;
     }
     .filter-chip:hover {
       border-color: #64748b;
@@ -354,141 +537,178 @@
       background: #f43f5e;
       color: #fff;
       border-color: #fb7185;
-      box-shadow: 0 2px 8px rgba(244, 63, 94, 0.4);
+      box-shadow: 0 2px 8px rgba(244, 63, 94, 0.35);
     }
     .filter-chip .chip-count {
-      font-size: 0.65rem;
+      font-size: 0.64rem;
       background: rgba(0, 0, 0, 0.35);
-      padding: 1px 6px;
+      padding: 1px 5px;
       border-radius: 10px;
     }
 
     /* Overview Bar */
     .overview-bar {
-      background: rgba(17, 24, 39, 0.6);
+      background: rgba(17, 24, 39, 0.65);
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 0.65rem 1rem;
+      padding: 0.5rem 0.75rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.75rem;
+      gap: 0.5rem;
       flex-wrap: wrap;
-      margin-bottom: 1.25rem;
-      font-size: 0.78rem;
+      margin-bottom: 0.8rem;
+      font-size: 0.74rem;
     }
     .badge-pill {
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      padding: 0.2rem 0.55rem;
+      padding: 0.18rem 0.5rem;
       border-radius: 6px;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 700;
       background: rgba(225, 29, 72, 0.15);
       color: #fda4af;
       border: 1px solid rgba(225, 29, 72, 0.3);
+    }
+    .accordion-bulk-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .text-link-btn {
+      background: none;
+      border: none;
+      color: #38bdf8;
+      font-size: 0.7rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: underline;
     }
 
     /* Muscle Columns Grid */
     .muscle-columns-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1rem;
+      gap: 0.7rem;
+      align-items: start;
     }
-    @media(min-width: 680px) {
-      .muscle-columns-grid { grid-template-columns: repeat(2, 1fr); }
+    @media (min-width: 680px) {
+      .muscle-columns-grid { grid-template-columns: repeat(2, 1fr); gap: 0.9rem; }
     }
-    @media(min-width: 1080px) {
-      .muscle-columns-grid { grid-template-columns: repeat(3, 1fr); }
+    @media (min-width: 1080px) {
+      .muscle-columns-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
     }
 
     .muscle-card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 0.9rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: border-color 0.2s ease, transform 0.15s ease;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s ease;
     }
     .muscle-card.has-active {
       border-color: #3b82f6;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
     }
     .muscle-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-bottom: 0.6rem;
-      border-bottom: 1px solid var(--border-color);
-      margin-bottom: 0.75rem;
+      padding: 0.75rem 0.85rem;
+      cursor: pointer;
+      user-select: none;
+      background: rgba(22, 32, 50, 0.45);
+      transition: background 0.15s ease;
+    }
+    .muscle-card-header:hover {
+      background: rgba(30, 41, 59, 0.7);
     }
     .muscle-title-wrap {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.55rem;
+      min-width: 0;
     }
     .muscle-icon-box {
-      width: 28px;
-      height: 28px;
-      border-radius: 7px;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
       background: var(--card-sub);
       color: #fda4af;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
+    }
+    .muscle-card.has-active .muscle-icon-box {
+      background: rgba(244, 63, 94, 0.2);
+      color: #f43f5e;
     }
     .muscle-name {
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
       color: #fff;
     }
     .muscle-subtitle {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
     }
-    .btn-add-exercise-mini {
-      width: 26px;
-      height: 26px;
-      border-radius: 6px;
-      background: var(--card-sub);
-      border: 1px solid var(--border-color);
-      color: #94a3b8;
-      cursor: pointer;
+    .muscle-header-right {
       display: flex;
       align-items: center;
-      justify-content: center;
-      transition: all 0.15s ease;
+      gap: 0.4rem;
     }
-    .btn-add-exercise-mini:hover {
-      background: var(--primary);
-      border-color: var(--primary);
+    .active-count-pill {
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 12px;
+      background: #1e293b;
+      color: #94a3b8;
+    }
+    .muscle-card.has-active .active-count-pill {
+      background: #e11d48;
       color: #fff;
     }
+    .chevron-icon {
+      transition: transform 0.2s ease;
+      color: #94a3b8;
+    }
+    .muscle-card.collapsed .chevron-icon {
+      transform: rotate(-90deg);
+    }
+    .muscle-card-body {
+      padding: 0.65rem 0.75rem 0.75rem;
+      border-top: 1px solid var(--border-color);
+    }
+    .muscle-card.collapsed .muscle-card-body {
+      display: none;
+    }
 
-    /* Exercise item item row */
+    /* Exercise List - Clean & Compact */
     .exercise-list {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      max-height: 480px;
+      gap: 0.4rem;
+      max-height: 420px;
       overflow-y: auto;
-      padding-right: 4px;
+      padding-right: 2px;
     }
     .exercise-row {
       background: #090e17;
       border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 0.55rem 0.65rem;
-      transition: all 0.2s ease;
+      border-radius: 9px;
+      padding: 0.5rem 0.65rem;
+      transition: all 0.15s ease;
     }
     .exercise-row.enabled {
       background: #0f172a;
-      border-color: rgba(244, 63, 94, 0.45);
+      border-color: rgba(244, 63, 94, 0.55);
+      box-shadow: inset 3px 0 0 #f43f5e;
     }
     .exercise-row-top {
       display: flex;
@@ -502,20 +722,21 @@
       color: #94a3b8;
       cursor: pointer;
       user-select: none;
-      line-height: 1.25;
+      line-height: 1.3;
       flex-grow: 1;
       word-break: break-word;
     }
     .exercise-row.enabled .exercise-label {
       color: #ffffff;
+      font-weight: 700;
     }
 
     /* Switch Toggle */
     .switch {
       position: relative;
       display: inline-block;
-      width: 34px;
-      height: 18px;
+      width: 36px;
+      height: 20px;
       flex-shrink: 0;
     }
     .switch input {
@@ -529,15 +750,15 @@
       top: 0; left: 0; right: 0; bottom: 0;
       background-color: #334155;
       transition: .2s;
-      border-radius: 18px;
+      border-radius: 20px;
     }
     .slider:before {
       position: absolute;
       content: "";
       height: 14px;
       width: 14px;
-      left: 2px;
-      bottom: 2px;
+      left: 3px;
+      bottom: 3px;
       background-color: white;
       transition: .2s;
       border-radius: 50%;
@@ -549,57 +770,67 @@
       transform: translateX(16px);
     }
 
-    /* Sets & Reps Input row */
+    /* Sets & Reps Input Row - Hidden when disabled to eliminate Android clutter! */
     .exercise-controls {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       margin-top: 0.45rem;
       padding-top: 0.45rem;
-      border-top: 1px dashed rgba(51, 65, 85, 0.6);
-      transition: opacity 0.2s ease;
+      border-top: 1px dashed rgba(51, 65, 85, 0.7);
     }
-    .exercise-controls.disabled {
-      opacity: 0.25;
-      pointer-events: none;
+    .exercise-controls.hidden-controls {
+      display: none;
     }
     .input-group {
       display: flex;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.35rem;
       flex: 1;
     }
     .input-label {
       font-size: 0.65rem;
       font-weight: 700;
-      color: var(--text-dim);
+      color: #94a3b8;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
     }
     .input-field {
       width: 100%;
       background: #111827;
       border: 1px solid #334155;
       border-radius: 6px;
-      padding: 0.25rem 0.4rem;
-      font-size: 0.75rem;
+      padding: 0.3rem 0.45rem;
+      font-size: 0.76rem;
       color: #fff;
       font-family: inherit;
       outline: none;
-      transition: border-color 0.15s;
     }
     .input-field:focus {
       border-color: var(--primary);
     }
     .input-field.input-sets {
-      width: 44px;
+      width: 52px;
       text-align: center;
+      font-weight: 700;
+      color: #fbbf24;
     }
 
+    /* Inline Custom Exercise Adder (No browser prompt() needed) */
+    .custom-add-wrap {
+      margin-top: 0.6rem;
+    }
+    .custom-add-form {
+      display: none;
+      gap: 0.35rem;
+      margin-top: 0.4rem;
+    }
+    .custom-add-form.show {
+      display: flex;
+    }
     .btn-add-custom-bottom {
-      margin-top: 0.75rem;
       width: 100%;
-      padding: 0.45rem;
+      padding: 0.42rem;
       border-radius: 8px;
       border: 1px dashed #334155;
       background: transparent;
@@ -611,59 +842,67 @@
       align-items: center;
       justify-content: center;
       gap: 0.35rem;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
     }
     .btn-add-custom-bottom:hover {
       border-color: #64748b;
       color: #fff;
-      background: rgba(255, 255, 255, 0.02);
+      background: rgba(255, 255, 255, 0.03);
     }
 
-    /* Athlete Profile Section */
-    .athlete-card {
-      margin-top: 2rem;
+    /* Member Profile Section */
+    .member-card {
+      margin-top: 1.25rem;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 14px;
-      padding: 1.25rem;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      padding: 1rem;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+      scroll-margin-top: 70px;
     }
-    .athlete-card-header {
+    .member-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid var(--border-color);
-      padding-bottom: 0.75rem;
-      margin-bottom: 1rem;
+      padding-bottom: 0.65rem;
+      margin-bottom: 0.85rem;
       flex-wrap: wrap;
       gap: 0.5rem;
     }
-    .athlete-grid {
+    .member-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.75rem;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.65rem;
     }
-    @media(min-width: 600px) {
-      .athlete-grid { grid-template-columns: repeat(2, 1fr); }
+    @media (min-width: 900px) {
+      .member-grid {
+        grid-template-columns: 1.5fr 0.8fr 1fr 1fr 1.3fr 1.4fr;
+      }
     }
-    @media(min-width: 900px) {
-      .athlete-grid { grid-template-columns: 1.5fr 1fr 1fr 1fr 1.2fr 1.4fr; }
+    .form-group.full-width-mobile {
+      grid-column: 1 / -1;
+    }
+    @media (min-width: 900px) {
+      .form-group.full-width-mobile {
+        grid-column: auto;
+      }
     }
     .form-group label {
       display: block;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
-      margin-bottom: 0.35rem;
-      letter-spacing: 0.05em;
+      margin-bottom: 0.3rem;
+      letter-spacing: 0.04em;
     }
     .form-group input, .form-group select {
       width: 100%;
       background: #090e17;
       border: 1px solid #334155;
       border-radius: 8px;
-      padding: 0.5rem 0.65rem;
+      padding: 0.48rem 0.6rem;
       font-size: 0.8rem;
       color: #fff;
       outline: none;
@@ -675,22 +914,22 @@
 
     /* Body Type Section Box */
     .bodytype-guidance {
-      margin-top: 0.9rem;
+      margin-top: 0.75rem;
       background: #090e17;
       border: 1px solid #1e293b;
       border-radius: 10px;
-      padding: 0.75rem 1rem;
+      padding: 0.65rem 0.85rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 0.5rem;
     }
     .bodytype-badge {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 800;
       text-transform: uppercase;
-      padding: 0.25rem 0.6rem;
+      padding: 0.22rem 0.55rem;
       border-radius: 6px;
       background: rgba(244, 63, 94, 0.15);
       color: #fda4af;
@@ -700,42 +939,94 @@
       gap: 5px;
     }
     .bodytype-info-text {
-      font-size: 0.75rem;
+      font-size: 0.73rem;
       color: #94a3b8;
       flex: 1;
-      min-width: 250px;
+      min-width: 220px;
+      line-height: 1.35;
     }
 
-    /* Athlete Card Footer */
-    .athlete-card-footer {
+    /* Member Card Footer */
+    .member-card-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-top: 1px solid var(--border-color);
-      padding-top: 1rem;
-      margin-top: 1rem;
-      gap: 1rem;
+      padding-top: 0.85rem;
+      margin-top: 0.85rem;
+      gap: 0.75rem;
       flex-wrap: wrap;
     }
     .action-group {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.45rem;
       flex-wrap: wrap;
+    }
+
+    /* Android Sticky Bottom Navigation Bar */
+    .android-bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: rgba(15, 23, 42, 0.98);
+      border-top: 1px solid #243044;
+      backdrop-filter: blur(12px);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      z-index: 60;
+      padding: 0 0.25rem;
+      box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.5);
+    }
+    @media (min-width: 900px) {
+      .android-bottom-nav {
+        display: none;
+      }
+    }
+    .nav-tab-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 8px;
+      margin: 4px 2px;
+      transition: all 0.15s ease;
+    }
+    .nav-tab-btn:active {
+      background: rgba(255, 255, 255, 0.06);
+      transform: scale(0.95);
+    }
+    .nav-tab-btn.highlight-amber {
+      color: #fbbf24;
+    }
+    .nav-tab-btn.highlight-rose {
+      color: #fb7185;
     }
 
     /* Toast Notification */
     #toast {
       position: fixed;
-      bottom: 1.5rem;
-      right: 1.5rem;
+      bottom: 4.6rem;
+      right: 1rem;
+      left: 1rem;
+      max-width: 380px;
+      margin: 0 auto;
       background: #111827;
       border: 1px solid #f43f5e;
       color: #fff;
-      padding: 0.75rem 1.25rem;
+      padding: 0.7rem 1rem;
       border-radius: 10px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-      font-size: 0.8rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      font-size: 0.78rem;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -744,7 +1035,14 @@
       transform: translateY(20px);
       pointer-events: none;
       transition: all 0.25s ease;
-      z-index: 100;
+      z-index: 110;
+    }
+    @media (min-width: 900px) {
+      #toast {
+        bottom: 1.5rem;
+        left: auto;
+        margin: 0;
+      }
     }
     #toast.show {
       opacity: 1;
@@ -752,16 +1050,16 @@
       pointer-events: auto;
     }
 
-    /* Modal for Weekly Review */
+    /* Modals (Weekly Summary & staminzer Folder Hub) */
     .modal-backdrop {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0, 0, 0, 0.85);
-      z-index: 90;
+      z-index: 95;
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
+      padding: 0.75rem;
     }
     .modal-backdrop.show {
       display: flex;
@@ -772,24 +1070,27 @@
       border-radius: 14px;
       width: 100%;
       max-width: 860px;
-      max-height: 90vh;
+      max-height: 88vh;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
       overflow: hidden;
     }
+    .modal-box.compact-modal {
+      max-width: 500px;
+    }
     .modal-header {
-      padding: 0.9rem 1.25rem;
+      padding: 0.85rem 1rem;
       border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
     .modal-title {
-      font-size: 1rem;
+      font-size: 0.92rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -809,18 +1110,59 @@
       color: #fff;
     }
     .modal-body {
-      padding: 1.25rem;
+      padding: 1rem;
       overflow-y: auto;
       flex-grow: 1;
     }
     .modal-footer {
-      padding: 0.75rem 1.25rem;
+      padding: 0.7rem 1rem;
       border-top: 1px solid var(--border-color);
       background: #090e17;
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 0.5rem;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+
+    /* staminzer Storage Option Cards */
+    .storage-option-card {
+      background: #090e17;
+      border: 1px solid #243044;
+      border-radius: 10px;
+      padding: 0.8rem;
+      margin-bottom: 0.65rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .storage-option-card:hover {
+      border-color: #f43f5e;
+      background: #0f172a;
+    }
+    .storage-opt-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .storage-opt-desc {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      margin-top: 3px;
+      line-height: 1.3;
+    }
+    .folder-path-code {
+      font-family: monospace;
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.12);
+      padding: 1px 5px;
+      border-radius: 4px;
     }
 
     /* Footer */
@@ -829,7 +1171,7 @@
       border-top: 1px solid var(--border-color);
       padding: 0.85rem 1rem;
       text-align: center;
-      font-size: 0.75rem;
+      font-size: 0.73rem;
       color: var(--text-dim);
     }
     footer a {
@@ -844,8 +1186,9 @@
       body {
         background: #ffffff !important;
         color: #000000 !important;
+        padding-bottom: 0 !important;
       }
-      header, footer, .day-selector-card, .filter-card, .overview-bar, .muscle-columns-grid, .athlete-card, #toast, .modal-backdrop, .no-print {
+      header, footer, .member-quick-bar, .day-selector-card, .filter-card, .overview-bar, .muscle-columns-grid, .member-card, .android-bottom-nav, #toast, .modal-backdrop, .no-print {
         display: none !important;
       }
       #printContainer {
@@ -895,98 +1238,135 @@
     <div class="header-inner">
       <div class="brand-wrap">
         <div class="brand-logo">
-          <svg class="icon" style="width:22px; height:22px;" viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43L20.57 12L17 15.57L8.43 7L12 3.43L10.57 2L9.14 3.43L7.71 2L5.57 4.14L4.14 2.71L2.71 4.14L4.14 5.57L2 7.71L3.43 9.14L2 10.57L3.43 12L7 8.43L15.57 17L12 20.57L13.43 22L14.86 20.57L16.29 22L18.43 19.86L19.86 21.29L21.29 19.86L19.86 18.43L22 16.29L20.57 14.86Z"/></svg>
+          <svg class="icon" style="width:20px; height:20px;" viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43L20.57 12L17 15.57L8.43 7L12 3.43L10.57 2L9.14 3.43L7.71 2L5.57 4.14L4.14 2.71L2.71 4.14L4.14 5.57L2 7.71L3.43 9.14L2 10.57L3.43 12L7 8.43L15.57 17L12 20.57L13.43 22L14.86 20.57L16.29 22L18.43 19.86L19.86 21.29L21.29 19.86L19.86 18.43L22 16.29L20.57 14.86Z"/></svg>
         </div>
-        <div>
-          <h1 class="brand-title">STAMIN<span style="color:var(--primary);">IZER</span></h1>
-          <p class="brand-sub">Nazrul Ashrampara ,Near Maya Nursing Home,Opposite of Sunhill Portico , BEhind hotel dollin ,Siliguri 734001</p>
+        <div class="brand-text-col">
+          <div class="brand-title-row">
+            <h1 class="brand-title">STAMIN<span style="color:var(--primary);">IZER</span></h1>
+            <span class="folder-pill-badge" onclick="openStaminzerExportModal()" title="Media Storage Folder">
+              <svg class="icon" style="width:11px; height:11px;" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+              staminzer/
+            </span>
+          </div>
+          <p class="brand-sub" onclick="this.classList.toggle('expanded')" title="Tap to expand full gym address">
+            Nazrul Ashrampara ,Near Maya Nursing Home,Opposite of Sunhill Portico , BEhind hotel dollin ,Siliguri 734001
+          </p>
         </div>
       </div>
 
       <div class="header-actions">
-        <a href="tel:6296306487" class="phone-badge" title="Staminizer Gym Helpline">
+        <a href="tel:6296306487" class="phone-badge" title="Call Staminizer Gym">
           <svg class="icon" style="width:13px; height:13px; color:#f43f5e;" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24c1.12.37 2.33.57 3.57.57c.55 0 1 .45 1 1V20c0 .55-.45 1-1 1c-9.39 0-17-7.61-17-17c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1c0 1.25.2 2.45.57 3.57c.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-          Phone number: <span>6296306487</span>
+          <span>6296306487</span>
         </a>
-        <button onclick="clearCurrentDay()" class="btn btn-secondary">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
-          Reset Day
-        </button>
-        <button onclick="downloadNativeJPG()" class="btn btn-amber">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
-          Download JPG
-        </button>
-        <button onclick="triggerNativePrint()" class="btn btn-primary">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1s1 .45 1 1s-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
-          Print / PDF
-        </button>
+
+        <!-- Desktop Action Buttons (Moved to Bottom Bar on Android to prevent header clutter) -->
+        <div class="desktop-only-actions">
+          <button onclick="clearCurrentDay()" class="btn btn-secondary">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+            Reset Day
+          </button>
+          <button onclick="openStaminzerExportModal()" class="btn btn-amber">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+            Save to staminzer/
+          </button>
+          <button onclick="triggerNativePrint()" class="btn btn-primary">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1s1 .45 1 1s-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+            Print / PDF
+          </button>
+        </div>
       </div>
     </div>
   </header>
 
   <!-- Main Work Area -->
   <main>
-    <!-- Day Selector Tabs -->
+    <!-- Compact Member Quick Bar -->
+    <div class="member-quick-bar">
+      <div class="member-quick-info">
+        <div class="member-avatar-pill" id="quickMemberInitials">AV</div>
+        <div style="min-width:0;">
+          <div style="font-size:0.65rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Member's Name</div>
+          <div style="font-weight:800; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="quickMemberNameDisplay">Alex Vance</div>
+        </div>
+      </div>
+      <div class="member-quick-actions">
+        <button class="mini-action-pill" onclick="scrollToMemberProfile()">
+          <svg class="icon" style="width:12px; height:12px; color:#fbbf24;" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          Edit Member
+        </button>
+        <button class="mini-action-pill" onclick="clearCurrentDay()" title="Reset current day exercises">
+          <svg class="icon" style="width:12px; height:12px; color:#f43f5e;" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+          Reset Day
+        </button>
+      </div>
+    </div>
+
+    <!-- Day Selector Ribbon (Swipeable on Android) -->
     <section class="day-selector-card">
       <div class="day-selector-header">
-        <span style="display:flex; align-items:center; gap:6px;">
-          <svg class="icon" style="color:var(--primary); width:13px; height:13px;" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 4h-2v-2h2v2zm4 0h-2v-2h2v2z"/></svg>
-          Workout Day
+        <span style="display:flex; align-items:center; gap:5px;">
+          <svg class="icon" style="color:var(--primary); width:13px; height:13px;" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
+          Select Workout Day
         </span>
-        <span id="activeDayStats" style="color:#34d399; font-weight:700;">0 exercises active</span>
+        <span id="activeDayStats" style="color:#34d399; font-weight:800;">0 exercises active</span>
       </div>
-      <div class="day-grid" id="dayTabsContainer"></div>
+      <div class="day-grid no-scrollbar" id="dayTabsContainer"></div>
     </section>
 
-    <!-- Target Body Part Filter / Chooser -->
+    <!-- Target Body Part Filter & Search Bar -->
     <section class="filter-card">
-      <div class="filter-title-row">
-        <div class="filter-label">
-          <svg class="icon" style="color:var(--primary); width:14px; height:14px;" viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
-          Target Body Part Filter (Choose Focus)
-        </div>
+      <div class="filter-controls-top">
         <div class="search-input-wrap">
           <svg class="icon search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-          <input type="text" id="exerciseSearchInput" class="search-input" placeholder="Search exercises..." oninput="onSearchExercises(this.value)">
+          <input type="text" id="exerciseSearchInput" class="search-input" placeholder="Search exercise name..." oninput="onSearchExercises(this.value)">
+          <button id="clearSearchBtn" class="clear-search-btn" onclick="clearSearchInput()">
+            <svg class="icon" style="width:14px; height:14px;" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          </button>
         </div>
+        <button id="activeOnlyBtn" class="active-only-toggle" onclick="toggleShowActiveOnly()">
+          <svg class="icon" style="width:13px; height:13px;" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          Selected Only
+        </button>
       </div>
-      <div class="filter-chip-container" id="filterChipContainer"></div>
+      <div class="filter-chip-container no-scrollbar" id="filterChipContainer"></div>
     </section>
 
     <!-- Overview Bar -->
     <div class="overview-bar">
-      <div>
-        <span style="color:var(--text-muted);">Current Focus for <b id="currentDayNameLabel" style="color:#fda4af; text-transform:uppercase;">Monday</b>:</span>
-        <span id="dayTargetBadges" style="margin-left:6px; display:inline-flex; gap:5px; flex-wrap:wrap;"></span>
+      <div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
+        <span style="color:var(--text-muted);">Focus (<b id="currentDayNameLabel" style="color:#fda4af; text-transform:uppercase;">Monday</b>):</span>
+        <span id="dayTargetBadges" style="display:inline-flex; gap:4px; flex-wrap:wrap;"></span>
       </div>
-      <div style="color:var(--text-dim); display:flex; gap:8px;">
-        <span><b style="color:#10b981;">●</b> ON = In Routine</span>
-        <span><b style="color:#64748b;">●</b> OFF = Excluded</span>
+      <div class="accordion-bulk-actions">
+        <button class="text-link-btn" onclick="setAllAccordions(false)">Expand All</button>
+        <span style="color:#334155;">|</span>
+        <button class="text-link-btn" onclick="setAllAccordions(true)">Collapse All</button>
       </div>
     </div>
 
-    <!-- Muscle Columns Grid -->
+    <!-- Muscle Columns Grid (Collapsible Accordions for Clutter-Free Android Experience) -->
     <div class="muscle-columns-grid" id="muscleGroupsGrid"></div>
 
-    <!-- Athlete / Member Profile Section with Body Type -->
-    <section class="athlete-card">
-      <div class="athlete-card-header">
+    <!-- Member Profile Section with Body Type -->
+    <section class="member-card" id="memberProfileSection">
+      <div class="member-card-header">
         <div style="display:flex; align-items:center; gap:8px;">
           <div style="width:30px; height:30px; border-radius:8px; background:rgba(245,158,11,0.2); color:#fbbf24; display:flex; align-items:center; justify-content:center;">
             <svg class="icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4s-4 1.79-4 4s1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
           </div>
           <div>
-            <h3 style="font-size:0.95rem; font-weight:800; text-transform:uppercase;">Athlete / Member Profile & Somatotype</h3>
-            <p style="font-size:0.7rem; color:var(--text-muted);">User credentials and body type parameters stamped onto exported JPG/PDF routines</p>
+            <h3 style="font-size:0.9rem; font-weight:800; text-transform:uppercase;">Member Profile & Somatotype</h3>
+            <p style="font-size:0.68rem; color:var(--text-muted);">Member credentials stamped onto <code style="color:#34d399;">staminzer/</code> exported JPG & PDF cards</p>
           </div>
         </div>
-        <div style="font-size:0.75rem; color:#fda4af; font-family:monospace; font-weight:700;">STAMINIZER GYM : 6296306487</div>
+        <div style="font-size:0.72rem; color:#fda4af; font-family:monospace; font-weight:700;">STAMINIZER GYM : 6296306487</div>
       </div>
 
-      <div class="athlete-grid">
-        <div class="form-group">
-          <label>Athlete Name</label>
-          <input type="text" id="member_name" value="Alex Vance" placeholder="Full Name" oninput="persistData(); updatePrintTitle();">
+      <div class="member-grid">
+        <div class="form-group full-width-mobile">
+          <label>Member's Name</label>
+          <input type="text" id="member_name" value="Alex Vance" placeholder="Enter Member's Name" oninput="persistData(); updateMemberQuickBar();">
         </div>
         <div class="form-group">
           <label>Age</label>
@@ -998,9 +1378,9 @@
         </div>
         <div class="form-group">
           <label>Weight</label>
-          <input type="text" id="member_weight" value="78 kg" placeholder="e.g. 78 kg / 172 lbs" oninput="persistData()">
+          <input type="text" id="member_weight" value="78 kg" placeholder="e.g. 78 kg" oninput="persistData()">
         </div>
-        <div class="form-group">
+        <div class="form-group full-width-mobile">
           <label>Body Type (Somatotype)</label>
           <select id="member_bodytype" onchange="onBodyTypeChanged()">
             <option value="Mesomorph">Mesomorph (Athletic & Muscular)</option>
@@ -1008,7 +1388,7 @@
             <option value="Endomorph">Endomorph (Solid & Slower Metabolism)</option>
           </select>
         </div>
-        <div class="form-group">
+        <div class="form-group full-width-mobile">
           <label>Primary Goal</label>
           <select id="member_goal" onchange="persistData()">
             <option value="Hypertrophy (Muscle Gain)">Hypertrophy (Muscle Gain)</option>
@@ -1027,35 +1407,55 @@
             <svg class="icon" style="width:12px; height:12px;" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             <span id="badgeTypeName">Mesomorph</span>
           </span>
-          <span style="font-size:0.75rem; font-weight:700; color:#fff;">Physique Directive:</span>
+          <span style="font-size:0.73rem; font-weight:700; color:#fff;">Physique Directive:</span>
         </div>
         <div class="bodytype-info-text" id="bodyTypeTip">
           Naturally athletic response: Respond best to progressive overload, moderate-to-heavy hypertrophy splits, and balanced macronutrient distribution.
         </div>
       </div>
 
-      <div class="athlete-card-footer">
-        <div style="font-size:0.75rem; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
+      <div class="member-card-footer">
+        <div style="font-size:0.72rem; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
           <svg class="icon" style="color:#10b981; width:14px; height:14px;" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-          Auto-saved locally (Offline Engine Active)
+          Auto-saved offline • Folder target: <code class="folder-path-code">staminzer/</code>
         </div>
 
         <div class="action-group">
           <button onclick="openPreviewModal()" class="btn btn-secondary">Weekly Summary</button>
-          <button onclick="downloadNativeJPG()" class="btn btn-amber">Save JPG Image</button>
+          <button onclick="openStaminzerExportModal()" class="btn btn-amber">Save to staminzer/</button>
           <button onclick="triggerNativePrint()" class="btn btn-primary">Print / PDF Card</button>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Modal Preview -->
+  <!-- Android Native-Style Sticky Bottom Action Bar -->
+  <nav class="android-bottom-nav no-print">
+    <button class="nav-tab-btn" onclick="scrollToMemberProfile()">
+      <svg class="icon" style="width:18px; height:18px;" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4s-4 1.79-4 4s1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span>Member</span>
+    </button>
+    <button class="nav-tab-btn" onclick="openPreviewModal()">
+      <svg class="icon" style="width:18px; height:18px;" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+      <span>Summary</span>
+    </button>
+    <button class="nav-tab-btn highlight-amber" onclick="openStaminzerExportModal()">
+      <svg class="icon" style="width:18px; height:18px;" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+      <span>staminzer/ JPG</span>
+    </button>
+    <button class="nav-tab-btn highlight-rose" onclick="triggerNativePrint()">
+      <svg class="icon" style="width:18px; height:18px;" viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1s1 .45 1 1s-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+      <span>PDF / Print</span>
+    </button>
+  </nav>
+
+  <!-- Modal 1: Weekly Summary Review -->
   <div class="modal-backdrop" id="previewModal">
     <div class="modal-box">
       <div class="modal-header">
         <div class="modal-title">
           <svg class="icon" style="color:var(--primary);" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
-          Complete Weekly Workout Split Review
+          Weekly Member Workout Summary
         </div>
         <button class="modal-close" onclick="closePreviewModal()">
           <svg class="icon" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
@@ -1064,13 +1464,92 @@
       <div class="modal-body" id="modalPreviewBody"></div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closePreviewModal()">Close</button>
-        <button class="btn btn-amber" onclick="downloadNativeJPG()">Save JPG</button>
+        <button class="btn btn-amber" onclick="openStaminzerExportModal()">Save to staminzer/</button>
         <button class="btn btn-primary" onclick="triggerNativePrint()">Print / PDF</button>
       </div>
     </div>
   </div>
 
-  <!-- Dedicated Print Container for Native Print / PDF (Visible only during window.print()) -->
+  <!-- Modal 2: "staminzer" Folder Media Storage Hub -->
+  <div class="modal-backdrop" id="staminzerExportModal">
+    <div class="modal-box compact-modal">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg class="icon" style="color:#fbbf24;" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+          Save Media to <code class="folder-path-code" style="font-size:0.85rem;">staminzer/</code>
+        </div>
+        <button class="modal-close" onclick="closeStaminzerExportModal()">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size:0.75rem; color:#cbd5e1; margin-bottom:0.8rem; line-height:1.4;">
+          Export workout card for <b id="exportMemberNameLabel" style="color:#fda4af;">Alex Vance</b> into your <span class="folder-path-code">staminzer</span> folder:
+        </div>
+
+        <!-- Option 1: Direct JPG Download with staminzer/ path -->
+        <div class="storage-option-card" onclick="downloadNativeJPG()">
+          <div>
+            <div class="storage-opt-title">
+              <svg class="icon" style="color:#fbbf24;" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+              Quick Download JPG (<span class="folder-path-code">staminzer/</span>)
+            </div>
+            <div class="storage-opt-desc">
+              Downloads high-resolution workout routine card named <code id="previewJpgFileName" style="color:#e2e8f0;">staminzer/Staminizer_Alex_Vance.jpg</code>.
+            </div>
+          </div>
+          <span class="btn btn-amber" style="padding:0.4rem 0.65rem;">JPG</span>
+        </div>
+
+        <!-- Option 2: Direct Folder Write (File System Access API) -->
+        <div class="storage-option-card" onclick="saveDirectlyToStaminzerDirectory()">
+          <div>
+            <div class="storage-opt-title">
+              <svg class="icon" style="color:#34d399;" viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 10H6v-2h8v2zm4-4H6v-2h12v2z"/></svg>
+              Auto-Create <span class="folder-path-code">staminzer</span> Folder on Device
+            </div>
+            <div class="storage-opt-desc">
+              Pick any storage location; automatically creates the <code style="color:#34d399;">staminzer</code> subfolder and saves the JPG inside it.
+            </div>
+          </div>
+          <span class="btn btn-emerald" style="padding:0.4rem 0.65rem;">Folder</span>
+        </div>
+
+        <!-- Option 3: Download staminzer/ ZIP Folder Package -->
+        <div class="storage-option-card" onclick="downloadStaminzerFolderZip()">
+          <div>
+            <div class="storage-opt-title">
+              <svg class="icon" style="color:#38bdf8;" viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-2 6h-2v2h2v2h-2v2h-2v-2h2v-2h-2v-2h2v-2h-2V8h2v2h2v2z"/></svg>
+              Download <span class="folder-path-code">staminzer/</span> Folder Pack (.ZIP)
+            </div>
+            <div class="storage-opt-desc">
+              Packages the JPG card + printable HTML inside a ready-to-extract <code style="color:#38bdf8;">staminzer/</code> folder archive for Android File Manager.
+            </div>
+          </div>
+          <span class="btn btn-secondary" style="padding:0.4rem 0.65rem;">.ZIP</span>
+        </div>
+
+        <!-- Option 4: Native Android Share Sheet -->
+        <div class="storage-option-card" onclick="shareRoutineOnAndroid()">
+          <div>
+            <div class="storage-opt-title">
+              <svg class="icon" style="color:#f43f5e;" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+              Share / Send to WhatsApp or Gallery
+            </div>
+            <div class="storage-opt-desc">
+              Opens native Android Share sheet to send the <code style="color:#fda4af;">staminzer</code> workout image directly to the member.
+            </div>
+          </div>
+          <span class="btn btn-primary" style="padding:0.4rem 0.65rem;">Share</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeStaminzerExportModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dedicated Print Container for Native Print / PDF -->
   <div id="printContainer"></div>
 
   <!-- Toast Element -->
@@ -1081,12 +1560,12 @@
 
   <!-- Footer -->
   <footer>
-    Staminizer  • phone no: <a href="tel:6296306487">6296306487</a>
+    Staminizer • Media Folder: <b style="color:#34d399; font-family:monospace;">staminzer/</b> • Phone no: <a href="tel:6296306487">6296306487</a>
   </footer>
 
   <!-- Application Logic -->
   <script>
-    // Comprehensive Master Muscle Groups & Full Exercise Notebook Catalog
+    // Master Muscle Groups & Full Exercise Catalog
     const MUSCLE_GROUPS = [
       {
         id: "chest",
@@ -1276,23 +1755,24 @@
         advice: "Naturally athletic response: Respond best to progressive overload, moderate-to-heavy hypertrophy splits (8-12 reps), and balanced macronutrient distribution with regular deloads."
       },
       "Ectomorph": {
-        advice: "Fast metabolic rate & lean build: Prioritize compound heavy movements (6-10 reps), extended rest periods (2-3 min), strict calorie surplus with high complex carbs & protein.",
-        badge: "Ectomorph"
+        badge: "Ectomorph",
+        advice: "Fast metabolic rate & lean build: Prioritize compound heavy movements (6-10 reps), extended rest periods (2-3 min), strict calorie surplus with high complex carbs & protein."
       },
       "Endomorph": {
-        advice: "Higher body fat tendency & solid bone structure: Thrive on high volume hypertrophy (10-15 reps), shorter rest intervals (45-60s), integrated HIIT/cardio, and lower carbohydrate intake.",
-        badge: "Endomorph"
+        badge: "Endomorph",
+        advice: "Higher body fat tendency & solid bone structure: Thrive on high volume hypertrophy (10-15 reps), shorter rest intervals (45-60s), integrated HIIT/cardio, and lower carbohydrate intake."
       }
     };
 
     let currentDayId = "mon";
     let selectedMuscleFilter = "all";
+    let showActiveOnly = false;
     let routineData = {};
     let customExercises = {};
     let searchQuery = "";
+    let collapsedMuscles = {}; // Keeps Android screen clutter-free
 
     function initApp() {
-      // Load saved state from browser's offline localStorage
       const savedRoutine = localStorage.getItem("staminizer_routine_offline");
       const savedCustom = localStorage.getItem("staminizer_custom_offline");
       const savedMember = localStorage.getItem("staminizer_member_offline");
@@ -1319,7 +1799,6 @@
         } catch (e) {}
       }
 
-      // Ensure keys exist for all days
       DAYS.forEach(d => {
         if (!routineData[d.id]) routineData[d.id] = {};
         MUSCLE_GROUPS.forEach(m => {
@@ -1327,19 +1806,49 @@
         });
       });
 
+      syncAccordionDefaultsForDay();
       onBodyTypeChanged();
-      updatePrintTitle();
+      updateMemberQuickBar();
       renderDayTabs();
       renderFilterChips();
       renderMuscleColumns();
       updateDayHeaderSummary();
     }
 
+    // On Android/mobile, auto-expand muscle groups that have active exercises on the current day, collapse idle ones
+    function syncAccordionDefaultsForDay() {
+      const isMobile = window.innerWidth < 900;
+      collapsedMuscles = {};
+      MUSCLE_GROUPS.forEach((m, idx) => {
+        const mEx = routineData[currentDayId]?.[m.id] || {};
+        const hasActive = Object.values(mEx).some(x => x.enabled);
+        if (isMobile) {
+          collapsedMuscles[m.id] = !hasActive && idx > 0;
+        } else {
+          collapsedMuscles[m.id] = false;
+        }
+      });
+    }
+
+    function setAllAccordions(collapse) {
+      MUSCLE_GROUPS.forEach(m => {
+        collapsedMuscles[m.id] = collapse;
+      });
+      renderMuscleColumns();
+    }
+
+    function toggleMuscleAccordion(muscleId) {
+      collapsedMuscles[muscleId] = !collapsedMuscles[muscleId];
+      const card = document.getElementById(`muscle-card-${muscleId}`);
+      if (card) {
+        card.classList.toggle('collapsed', collapsedMuscles[muscleId]);
+      }
+    }
+
     function buildDefaultRoutine() {
       routineData = {};
       DAYS.forEach(d => { routineData[d.id] = {}; });
 
-      // Monday: Chest & Triceps
       routineData['mon']['chest'] = {
         "Flat Bench Press (Barbell / Dumbbell / Smith)": { enabled: true, sets: 4, reps: "8-10" },
         "Incline Bench Press (Barbell / DB / Smith)": { enabled: true, sets: 4, reps: "8-10" },
@@ -1350,7 +1859,6 @@
         "Close-Grip Bench Press": { enabled: true, sets: 3, reps: "8-10" }
       };
 
-      // Tuesday: Back & Biceps
       routineData['tue']['back'] = {
         "Lat Pulldown (Standard / Wide / Close / Reverse)": { enabled: true, sets: 4, reps: "10-12" },
         "Bent-Over Row (Barbell / Dumbbell)": { enabled: true, sets: 4, reps: "8-10" },
@@ -1370,9 +1878,21 @@
       persistData();
     }
 
-    function updatePrintTitle() {
-      const name = document.getElementById('member_name').value.trim() || 'Athlete';
-      document.title = `${name} - Staminizer Gym Workout Split`;
+    function updateMemberQuickBar() {
+      const name = document.getElementById('member_name').value.trim() || 'Member';
+      document.title = `${name} - Staminizer Gym Workout Matrix`;
+      document.getElementById('quickMemberNameDisplay').textContent = name;
+
+      const parts = name.split(/\s+/).filter(Boolean);
+      const initials = parts.length >= 2
+        ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+        : name.slice(0, 2).toUpperCase();
+      document.getElementById('quickMemberInitials').textContent = initials;
+    }
+
+    function scrollToMemberProfile() {
+      const el = document.getElementById('memberProfileSection');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
 
     function persistData() {
@@ -1390,18 +1910,26 @@
       localStorage.setItem("staminizer_member_offline", JSON.stringify(memberInfo));
     }
 
+    function toggleShowActiveOnly() {
+      showActiveOnly = !showActiveOnly;
+      const btn = document.getElementById('activeOnlyBtn');
+      btn.classList.toggle('on', showActiveOnly);
+      if (showActiveOnly) {
+        setAllAccordions(false);
+      }
+      renderMuscleColumns();
+    }
+
     function renderFilterChips() {
       const container = document.getElementById('filterChipContainer');
       container.innerHTML = '';
 
-      // Count all active exercises for current day
       let totalDayActive = 0;
       MUSCLE_GROUPS.forEach(m => {
         const mEx = routineData[currentDayId]?.[m.id] || {};
         totalDayActive += Object.values(mEx).filter(x => x.enabled).length;
       });
 
-      // "All" filter chip
       const allBtn = document.createElement('div');
       allBtn.className = `filter-chip ${selectedMuscleFilter === 'all' ? 'active' : ''}`;
       allBtn.onclick = () => {
@@ -1412,7 +1940,6 @@
       allBtn.innerHTML = `All Body Parts <span class="chip-count">${totalDayActive}</span>`;
       container.appendChild(allBtn);
 
-      // Category chips
       MUSCLE_GROUPS.forEach(m => {
         const mEx = routineData[currentDayId]?.[m.id] || {};
         const count = Object.values(mEx).filter(x => x.enabled).length;
@@ -1421,6 +1948,7 @@
         chip.className = `filter-chip ${selectedMuscleFilter === m.id ? 'active' : ''}`;
         chip.onclick = () => {
           selectedMuscleFilter = m.id;
+          collapsedMuscles[m.id] = false; // Automatically open chosen muscle
           renderFilterChips();
           renderMuscleColumns();
         };
@@ -1431,7 +1959,17 @@
 
     function onSearchExercises(query) {
       searchQuery = query.toLowerCase().trim();
+      document.getElementById('clearSearchBtn').style.display = searchQuery ? 'block' : 'none';
+      if (searchQuery) {
+        setAllAccordions(false);
+      }
       renderMuscleColumns();
+    }
+
+    function clearSearchInput() {
+      const input = document.getElementById('exerciseSearchInput');
+      input.value = '';
+      onSearchExercises('');
     }
 
     function renderDayTabs() {
@@ -1464,6 +2002,7 @@
 
     function selectDay(dayId) {
       currentDayId = dayId;
+      syncAccordionDefaultsForDay();
       renderDayTabs();
       renderFilterChips();
       renderMuscleColumns();
@@ -1490,7 +2029,7 @@
       });
 
       if (activeMuscles.length === 0) {
-        badgeContainer.innerHTML = `<span style="color:#64748b; font-style:italic;">No exercises selected (Rest Day)</span>`;
+        badgeContainer.innerHTML = `<span style="color:#64748b; font-style:italic;">Rest Day</span>`;
       } else {
         activeMuscles.forEach(txt => {
           const pill = document.createElement('span');
@@ -1500,15 +2039,15 @@
         });
       }
 
-      document.getElementById('activeDayStats').textContent = `${dayTotalCount} exercises active today`;
+      document.getElementById('activeDayStats').textContent = `${dayTotalCount} active`;
     }
 
     function renderMuscleColumns() {
       const grid = document.getElementById('muscleGroupsGrid');
       grid.innerHTML = '';
 
-      const targetList = (selectedMuscleFilter === 'all') 
-        ? MUSCLE_GROUPS 
+      const targetList = (selectedMuscleFilter === 'all')
+        ? MUSCLE_GROUPS
         : MUSCLE_GROUPS.filter(m => m.id === selectedMuscleFilter);
 
       let renderedAny = false;
@@ -1516,39 +2055,46 @@
       targetList.forEach(muscle => {
         const customList = customExercises[muscle.id] || [];
         let allExercises = [...muscle.defaultExercises, ...customList];
+        const groupData = routineData[currentDayId]?.[muscle.id] || {};
 
         if (searchQuery) {
           allExercises = allExercises.filter(e => e.name.toLowerCase().includes(searchQuery));
         }
 
-        if (searchQuery && allExercises.length === 0) {
+        if (showActiveOnly) {
+          allExercises = allExercises.filter(e => groupData[e.name]?.enabled);
+        }
+
+        if ((searchQuery || showActiveOnly) && allExercises.length === 0) {
           return;
         }
 
         renderedAny = true;
-        const groupData = routineData[currentDayId]?.[muscle.id] || {};
         const activeCount = Object.values(groupData).filter(item => item.enabled).length;
+        const isCollapsed = !!collapsedMuscles[muscle.id] && selectedMuscleFilter === 'all' && !searchQuery && !showActiveOnly;
 
         const card = document.createElement('div');
-        card.className = `muscle-card ${activeCount > 0 ? 'has-active' : ''}`;
+        card.id = `muscle-card-${muscle.id}`;
+        card.className = `muscle-card ${activeCount > 0 ? 'has-active' : ''} ${isCollapsed ? 'collapsed' : ''}`;
 
         let cardHtml = `
-          <div>
-            <div class="muscle-card-header">
-              <div class="muscle-title-wrap">
-                <div class="muscle-icon-box">
-                  <svg class="icon" viewBox="0 0 24 24"><path d="${muscle.svgPath}"/></svg>
-                </div>
-                <div>
-                  <div class="muscle-name">${muscle.name}</div>
-                  <div class="muscle-subtitle">${activeCount} active for ${DAYS.find(d => d.id === currentDayId).short}</div>
-                </div>
+          <div class="muscle-card-header" onclick="toggleMuscleAccordion('${muscle.id}')">
+            <div class="muscle-title-wrap">
+              <div class="muscle-icon-box">
+                <svg class="icon" viewBox="0 0 24 24"><path d="${muscle.svgPath}"/></svg>
               </div>
-              <button onclick="promptAddCustomExercise('${muscle.id}', '${muscle.name}')" title="Add custom exercise" class="btn-add-exercise-mini">
-                <svg class="icon" style="width:12px; height:12px;" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-              </button>
+              <div>
+                <div class="muscle-name">${muscle.name}</div>
+                <div class="muscle-subtitle">${allExercises.length} exercises available</div>
+              </div>
             </div>
+            <div class="muscle-header-right">
+              <span class="active-count-pill">${activeCount} ON</span>
+              <svg class="icon chevron-icon" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+            </div>
+          </div>
 
+          <div class="muscle-card-body">
             <div class="exercise-list">
         `;
 
@@ -1572,8 +2118,8 @@
                 </label>
               </div>
 
-              <div class="exercise-controls ${isChecked ? '' : 'disabled'}">
-                <div class="input-group">
+              <div class="exercise-controls ${isChecked ? '' : 'hidden-controls'}">
+                <div class="input-group" style="max-width:105px;">
                   <span class="input-label">Sets:</span>
                   <input type="number" min="1" max="20" class="input-field input-sets" value="${exState.sets}" onchange="updateExerciseData('${muscle.id}', '${escapeQuotes(ex.name)}', 'sets', this.value)">
                 </div>
@@ -1588,11 +2134,17 @@
 
         cardHtml += `
             </div>
+            <div class="custom-add-wrap">
+              <button onclick="toggleCustomExerciseForm('${muscle.id}')" class="btn-add-custom-bottom">
+                <svg class="icon" style="width:12px; height:12px;" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                Add Custom ${muscle.name} Exercise
+              </button>
+              <div class="custom-add-form" id="custom-form-${muscle.id}">
+                <input type="text" id="custom-input-${muscle.id}" class="input-field" placeholder="New exercise name..." onkeydown="if(event.key==='Enter') saveCustomExercise('${muscle.id}')">
+                <button class="btn btn-primary" style="padding:0.35rem 0.65rem;" onclick="saveCustomExercise('${muscle.id}')">Add</button>
+              </div>
+            </div>
           </div>
-          <button onclick="promptAddCustomExercise('${muscle.id}', '${muscle.name}')" class="btn-add-custom-bottom">
-            <svg class="icon" style="width:12px; height:12px;" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-            Add ${muscle.name} Exercise
-          </button>
         `;
 
         card.innerHTML = cardHtml;
@@ -1601,40 +2153,31 @@
 
       if (!renderedAny) {
         grid.innerHTML = `
-          <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #64748b; font-size: 0.85rem;">
-            No exercises found matching "<b>${searchQuery}</b>". Try another search or clear the filter.
+          <div style="grid-column: 1 / -1; text-align: center; padding: 2rem 1rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; color: #94a3b8; font-size: 0.82rem;">
+            No exercises match your current filter.
+            <div style="margin-top:0.6rem;">
+              <button class="btn btn-secondary" onclick="showActiveOnly=false; document.getElementById('activeOnlyBtn').classList.remove('on'); clearSearchInput();">Reset Filters</button>
+            </div>
           </div>
         `;
       }
     }
 
-    function toggleExercise(muscleId, exName, isChecked) {
-      if (!routineData[currentDayId]) routineData[currentDayId] = {};
-      if (!routineData[currentDayId][muscleId]) routineData[currentDayId][muscleId] = {};
-
-      const current = routineData[currentDayId][muscleId][exName] || { sets: 3, reps: "10-12" };
-      current.enabled = isChecked;
-      routineData[currentDayId][muscleId][exName] = current;
-
-      persistData();
-      renderDayTabs();
-      renderFilterChips();
-      renderMuscleColumns();
-      updateDayHeaderSummary();
-      showToast(isChecked ? `Added: ${exName}` : `Removed: ${exName}`);
+    function toggleCustomExerciseForm(muscleId) {
+      const form = document.getElementById(`custom-form-${muscleId}`);
+      if (!form) return;
+      form.classList.toggle('show');
+      if (form.classList.contains('show')) {
+        const inp = document.getElementById(`custom-input-${muscleId}`);
+        if (inp) inp.focus();
+      }
     }
 
-    function updateExerciseData(muscleId, exName, field, value) {
-      if (!routineData[currentDayId]?.[muscleId]?.[exName]) return;
-      routineData[currentDayId][muscleId][exName][field] = value;
-      persistData();
-    }
+    function saveCustomExercise(muscleId) {
+      const inp = document.getElementById(`custom-input-${muscleId}`);
+      if (!inp || !inp.value.trim()) return;
 
-    function promptAddCustomExercise(muscleId, muscleName) {
-      const name = prompt(`Enter new custom exercise name for ${muscleName}:`);
-      if (!name || !name.trim()) return;
-
-      const trimmed = name.trim();
+      const trimmed = inp.value.trim();
       if (!customExercises[muscleId]) customExercises[muscleId] = [];
 
       const exists = customExercises[muscleId].some(e => e.name.toLowerCase() === trimmed.toLowerCase());
@@ -1649,12 +2192,36 @@
       if (!routineData[currentDayId][muscleId]) routineData[currentDayId][muscleId] = {};
       routineData[currentDayId][muscleId][trimmed] = { enabled: true, sets: 3, reps: "10-12" };
 
+      collapsedMuscles[muscleId] = false;
       persistData();
       renderMuscleColumns();
       renderFilterChips();
       renderDayTabs();
       updateDayHeaderSummary();
       showToast(`Added: ${trimmed}`);
+    }
+
+    function toggleExercise(muscleId, exName, isChecked) {
+      if (!routineData[currentDayId]) routineData[currentDayId] = {};
+      if (!routineData[currentDayId][muscleId]) routineData[currentDayId][muscleId] = {};
+
+      const current = routineData[currentDayId][muscleId][exName] || { sets: 3, reps: "10-12" };
+      current.enabled = isChecked;
+      routineData[currentDayId][muscleId][exName] = current;
+
+      collapsedMuscles[muscleId] = false;
+      persistData();
+      renderDayTabs();
+      renderFilterChips();
+      renderMuscleColumns();
+      updateDayHeaderSummary();
+      showToast(isChecked ? `Added: ${exName}` : `Removed: ${exName}`);
+    }
+
+    function updateExerciseData(muscleId, exName, field, value) {
+      if (!routineData[currentDayId]?.[muscleId]?.[exName]) return;
+      routineData[currentDayId][muscleId][exName][field] = value;
+      persistData();
     }
 
     function clearCurrentDay() {
@@ -1667,7 +2234,7 @@
       renderFilterChips();
       renderMuscleColumns();
       updateDayHeaderSummary();
-      showToast(`Cleared exercises for ${DAYS.find(d => d.id === currentDayId).name}`);
+      showToast(`Reset ${DAYS.find(d => d.id === currentDayId).name}`);
     }
 
     function escapeQuotes(str) {
@@ -1681,10 +2248,10 @@
       toast.classList.add('show');
       setTimeout(() => {
         toast.classList.remove('show');
-      }, 2500);
+      }, 2600);
     }
 
-    // Modal Overview
+    // Modal 1: Weekly Summary Overview
     function openPreviewModal() {
       const modal = document.getElementById('previewModal');
       const body = document.getElementById('modalPreviewBody');
@@ -1696,9 +2263,22 @@
       document.getElementById('previewModal').classList.remove('show');
     }
 
-    // Build Formatted HTML for Preview & Print
+    // Modal 2: staminzer Folder Export Hub
+    function openStaminzerExportModal() {
+      const memberName = document.getElementById('member_name').value.trim() || 'Member';
+      const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
+      document.getElementById('exportMemberNameLabel').textContent = memberName;
+      document.getElementById('previewJpgFileName').textContent = `staminzer/Staminizer_Workout_${cleanName}.jpg`;
+      document.getElementById('staminzerExportModal').classList.add('show');
+    }
+
+    function closeStaminzerExportModal() {
+      document.getElementById('staminzerExportModal').classList.remove('show');
+    }
+
+    // Build Formatted HTML for Preview & Print (Updated with Member's Name)
     function generateWeeklySummaryHTML() {
-      const athlete = document.getElementById('member_name').value || 'Athlete';
+      const memberName = document.getElementById('member_name').value || 'Member';
       const age = document.getElementById('member_age').value || '-';
       const height = document.getElementById('member_height').value || '-';
       const weight = document.getElementById('member_weight').value || '-';
@@ -1707,19 +2287,19 @@
 
       let html = `
         <div style="font-family: inherit;">
-          <div style="border-bottom: 2px solid #e11d48; padding-bottom: 8px; margin-bottom: 12px; display:flex; justify-content:space-between; align-items:flex-end;">
+          <div style="border-bottom: 2px solid #e11d48; padding-bottom: 8px; margin-bottom: 12px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:8px;">
             <div>
-              <h2 style="font-size: 1.3rem; font-weight: 900; text-transform: uppercase; color: #fff; line-height: 1;">STAMIN<span style="color:#f43f5e;">IZER</span> WORKOUT MATRIX</h2>
-              <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 3px;">Weekly Engineered Routine Card</div>
+              <h2 style="font-size: 1.25rem; font-weight: 900; text-transform: uppercase; color: #fff; line-height: 1;">STAMIN<span style="color:#f43f5e;">IZER</span> WORKOUT MATRIX</h2>
+              <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 3px;">Nazrul Ashrampara, Near Maya Nursing Home, Siliguri 734001</div>
             </div>
             <div style="text-align: right;">
               <div style="color: #fda4af; font-family: monospace; font-weight: 700; font-size: 0.85rem;">TEL: 6296306487</div>
-              <div style="font-size: 0.7rem; color: #cbd5e1;">${new Date().toLocaleDateString()}</div>
+              <div style="font-size: 0.68rem; color: #cbd5e1;">Folder: staminzer/ • ${new Date().toLocaleDateString()}</div>
             </div>
           </div>
 
           <div style="background: #090e17; border: 1px solid #1e293b; border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; font-size: 0.75rem;">
-            <div><span style="color:#64748b; font-weight:700;">ATHLETE:</span> <b style="color:#fff;">${athlete}</b></div>
+            <div><span style="color:#64748b; font-weight:700;">MEMBER'S NAME:</span> <b style="color:#fff;">${memberName}</b></div>
             <div><span style="color:#64748b; font-weight:700;">AGE:</span> <b style="color:#fff;">${age} yrs</b></div>
             <div><span style="color:#64748b; font-weight:700;">HEIGHT:</span> <b style="color:#fff;">${height}</b></div>
             <div><span style="color:#64748b; font-weight:700;">WEIGHT:</span> <b style="color:#fff;">${weight}</b></div>
@@ -1739,7 +2319,7 @@
             if (item && item.enabled) {
               hasEx = true;
               rows += `
-                <tr style="border-bottom: 1px solid #1e293b; font-size: 0.75rem;">
+                <tr style="border-bottom: 1px solid #1e293b; font-size: 0.74rem;">
                   <td style="padding: 5px 8px; font-weight: 700; color: #fda4af; text-transform: uppercase;">${m.name}</td>
                   <td style="padding: 5px 8px; color: #ffffff;">${name}</td>
                   <td style="padding: 5px 8px; text-align: center; color: #fbbf24; font-weight: 700;">${item.sets}</td>
@@ -1754,19 +2334,19 @@
           <div class="print-card-box" style="background: #090e17; border: 1px solid #1e293b; border-radius: 8px; margin-bottom: 10px; overflow: hidden;">
             <div style="background: #111827; padding: 6px 10px; border-bottom: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center;">
               <span style="font-weight: 800; font-size: 0.8rem; text-transform: uppercase; color: #fff;">● ${day.name}</span>
-              <span style="font-size: 0.7rem; font-weight: 700; color: ${hasEx ? '#34d399' : '#64748b'}; text-transform: uppercase;">
+              <span style="font-size: 0.68rem; font-weight: 700; color: ${hasEx ? '#34d399' : '#64748b'}; text-transform: uppercase;">
                 ${hasEx ? 'Workout Scheduled' : 'Rest & Recovery'}
               </span>
             </div>
             ${
-              hasEx 
+              hasEx
               ? `<table style="width: 100%; border-collapse: collapse;">
                   <thead>
-                    <tr style="background: #0d131f; font-size: 0.68rem; color: #94a3b8; text-transform: uppercase;">
-                      <th style="padding: 4px 8px; text-align: left; width: 140px;">Muscle</th>
+                    <tr style="background: #0d131f; font-size: 0.66rem; color: #94a3b8; text-transform: uppercase;">
+                      <th style="padding: 4px 8px; text-align: left; width: 130px;">Muscle</th>
                       <th style="padding: 4px 8px; text-align: left;">Exercise</th>
-                      <th style="padding: 4px 8px; text-align: center; width: 65px;">Sets</th>
-                      <th style="padding: 4px 8px; text-align: center; width: 90px;">Reps</th>
+                      <th style="padding: 4px 8px; text-align: center; width: 60px;">Sets</th>
+                      <th style="padding: 4px 8px; text-align: center; width: 85px;">Reps</th>
                     </tr>
                   </thead>
                   <tbody>${rows}</tbody>
@@ -1778,10 +2358,10 @@
       });
 
       html += `
-          <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #1e293b; display: flex; justify-content: space-between; font-size: 0.7rem; color: #64748b;">
+          <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #1e293b; display: flex; justify-content: space-between; font-size: 0.7rem; color: #64748b; flex-wrap: wrap; gap: 6px;">
             <span>Coach Verification: ____________________</span>
             <span>Helpline: 6296306487</span>
-            <span>Consistency • Progressive Overload</span>
+            <span>Staminizer Folder: staminzer/</span>
           </div>
         </div>
       `;
@@ -1791,17 +2371,15 @@
 
     // 100% OFFLINE NATIVE PRINT / PDF
     function triggerNativePrint() {
-      updatePrintTitle();
+      updateMemberQuickBar();
       const container = document.getElementById('printContainer');
       container.innerHTML = generateWeeklySummaryHTML();
       window.print();
     }
 
-    // 100% OFFLINE NATIVE HTML5 CANVAS JPG EXPORT
-    function downloadNativeJPG() {
-      showToast("Generating Routine JPG...");
-
-      const athlete = document.getElementById('member_name').value.trim() || 'Athlete';
+    // Build Canvas for JPG Generation (With "MEMBER'S NAME" & staminzer/ stamp)
+    function buildWorkoutCanvas() {
+      const memberName = document.getElementById('member_name').value.trim() || 'Member';
       const age = document.getElementById('member_age').value || '-';
       const height = document.getElementById('member_height').value || '-';
       const weight = document.getElementById('member_weight').value || '-';
@@ -1809,13 +2387,13 @@
       const goal = document.getElementById('member_goal').value || 'Fitness';
 
       const canvasWidth = 840;
-      let totalHeight = 40; // top padding
-      totalHeight += 70; // Header & Phone banner
-      totalHeight += 50; // Athlete Bio Box
-      totalHeight += 20; // margin
+      let totalHeight = 40;
+      totalHeight += 70;
+      totalHeight += 50;
+      totalHeight += 20;
 
       DAYS.forEach(day => {
-        totalHeight += 32; // day title bar
+        totalHeight += 32;
         let activeExCount = 0;
         MUSCLE_GROUPS.forEach(m => {
           const list = routineData[day.id]?.[m.id] || {};
@@ -1825,22 +2403,21 @@
         });
 
         if (activeExCount > 0) {
-          totalHeight += 24; // table header
-          totalHeight += (activeExCount * 26); // table rows
+          totalHeight += 24;
+          totalHeight += (activeExCount * 26);
         } else {
-          totalHeight += 28; // rest message
+          totalHeight += 28;
         }
-        totalHeight += 12; // gap between days
+        totalHeight += 12;
       });
 
-      totalHeight += 50; // footer signature
+      totalHeight += 50;
 
       const canvas = document.createElement('canvas');
       canvas.width = canvasWidth;
       canvas.height = totalHeight;
       const ctx = canvas.getContext('2d');
 
-      // Background
       ctx.fillStyle = '#0b0f17';
       ctx.fillRect(0, 0, canvasWidth, totalHeight);
 
@@ -1864,18 +2441,17 @@
       ctx.fillStyle = '#fda4af';
       ctx.font = 'bold 15px monospace';
       ctx.fillText('TEL: 6296306487', rightMargin, y - 5);
-      ctx.fillStyle = '#94a3b8';
-      ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.fillText(new Date().toLocaleDateString(), rightMargin, y + 14);
+      ctx.fillStyle = '#34d399';
+      ctx.font = '11px monospace';
+      ctx.fillText('staminzer/ • ' + new Date().toLocaleDateString(), rightMargin, y + 14);
 
       // Subtitle
       ctx.textAlign = 'left';
       ctx.fillStyle = '#94a3b8';
-      ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.fillText('Personalized Weekly Muscle Engineering Matrix', leftMargin, y + 18);
+      ctx.font = '11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      ctx.fillText('Nazrul Ashrampara, Near Maya Nursing Home, Opposite Sunhill Portico, Siliguri 734001', leftMargin, y + 18);
 
       y += 28;
-      // Line
       ctx.strokeStyle = '#f43f5e';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -1885,38 +2461,36 @@
 
       y += 14;
 
-      // Athlete Bio Card
+      // Member Bio Card
       ctx.fillStyle = '#111827';
       ctx.strokeStyle = '#1e293b';
       ctx.lineWidth = 1;
       roundRect(ctx, leftMargin, y, contentWidth, 42, 6, true, true);
 
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       const colStep = contentWidth / 6;
 
-      // Col 1: Name
-      ctx.fillStyle = '#94a3b8'; ctx.font = '9px sans-serif'; ctx.fillText('ATHLETE NAME', leftMargin + 10, y + 16);
-      ctx.fillStyle = '#ffffff'; ctx.font = 'bold 12px sans-serif'; ctx.fillText(athlete, leftMargin + 10, y + 32);
+      // Col 1: Member's Name
+      ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 9px sans-serif'; ctx.fillText("MEMBER'S NAME", leftMargin + 10, y + 16);
+      ctx.fillStyle = '#ffffff'; ctx.font = 'bold 12px sans-serif'; ctx.fillText(memberName, leftMargin + 10, y + 32);
 
       // Col 2: Age
-      ctx.fillStyle = '#94a3b8'; ctx.font = '9px sans-serif'; ctx.fillText('AGE', leftMargin + colStep, y + 16);
+      ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 9px sans-serif'; ctx.fillText('AGE', leftMargin + colStep, y + 16);
       ctx.fillStyle = '#ffffff'; ctx.font = 'bold 12px sans-serif'; ctx.fillText(age + ' yrs', leftMargin + colStep, y + 32);
 
       // Col 3: Height
-      ctx.fillStyle = '#94a3b8'; ctx.font = '9px sans-serif'; ctx.fillText('HEIGHT', leftMargin + (colStep * 1.8), y + 16);
+      ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 9px sans-serif'; ctx.fillText('HEIGHT', leftMargin + (colStep * 1.8), y + 16);
       ctx.fillStyle = '#ffffff'; ctx.font = 'bold 12px sans-serif'; ctx.fillText(height, leftMargin + (colStep * 1.8), y + 32);
 
       // Col 4: Weight
-      ctx.fillStyle = '#94a3b8'; ctx.font = '9px sans-serif'; ctx.fillText('WEIGHT', leftMargin + (colStep * 2.7), y + 16);
+      ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 9px sans-serif'; ctx.fillText('WEIGHT', leftMargin + (colStep * 2.7), y + 16);
       ctx.fillStyle = '#ffffff'; ctx.font = 'bold 12px sans-serif'; ctx.fillText(weight, leftMargin + (colStep * 2.7), y + 32);
 
       // Col 5: Body Type
-      ctx.fillStyle = '#94a3b8'; ctx.font = '9px sans-serif'; ctx.fillText('BODY TYPE', leftMargin + (colStep * 3.6), y + 16);
+      ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 9px sans-serif'; ctx.fillText('BODY TYPE', leftMargin + (colStep * 3.6), y + 16);
       ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 12px sans-serif'; ctx.fillText(bodytype, leftMargin + (colStep * 3.6), y + 32);
 
       // Col 6: Goal
-      ctx.fillStyle = '#94a3b8'; ctx.font = '9px sans-serif'; ctx.fillText('PRIMARY GOAL', leftMargin + (colStep * 4.6), y + 16);
+      ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 9px sans-serif'; ctx.fillText('PRIMARY GOAL', leftMargin + (colStep * 4.6), y + 16);
       ctx.fillStyle = '#fda4af'; ctx.font = 'bold 12px sans-serif'; ctx.fillText(goal, leftMargin + (colStep * 4.6), y + 32);
 
       y += 56;
@@ -1941,13 +2515,11 @@
         const hasEx = activeExList.length > 0;
         const dayBoxHeight = hasEx ? (30 + 22 + (activeExList.length * 24)) : 52;
 
-        // Container Box
         ctx.fillStyle = '#090e17';
         ctx.strokeStyle = '#1e293b';
         ctx.lineWidth = 1;
         roundRect(ctx, leftMargin, y, contentWidth, dayBoxHeight, 6, true, true);
 
-        // Day Bar Header
         ctx.fillStyle = '#111827';
         roundRect(ctx, leftMargin, y, contentWidth, 26, { tl: 6, tr: 6, br: 0, bl: 0 }, true, false);
 
@@ -1969,7 +2541,6 @@
         let innerY = y + 26;
 
         if (hasEx) {
-          // Table header
           ctx.fillStyle = '#0d131f';
           ctx.fillRect(leftMargin, innerY, contentWidth, 20);
 
@@ -1988,23 +2559,19 @@
             ctx.fillStyle = (i % 2 === 0) ? '#090e17' : '#0c121e';
             ctx.fillRect(leftMargin, innerY, contentWidth, 24);
 
-            // Muscle name
             ctx.fillStyle = '#fda4af';
             ctx.font = 'bold 10px sans-serif';
             ctx.fillText(item.muscle.toUpperCase(), leftMargin + 10, innerY + 16);
 
-            // Exercise name
             ctx.fillStyle = '#f8fafc';
             ctx.font = '11px sans-serif';
             ctx.fillText(item.name, leftMargin + 150, innerY + 16);
 
-            // Sets
             ctx.textAlign = 'center';
             ctx.fillStyle = '#fbbf24';
             ctx.font = 'bold 11px sans-serif';
             ctx.fillText(item.sets.toString(), rightMargin - 120, innerY + 16);
 
-            // Reps
             ctx.fillStyle = '#e2e8f0';
             ctx.font = '11px monospace';
             ctx.fillText(item.reps.toString(), rightMargin - 45, innerY + 16);
@@ -2021,7 +2588,6 @@
         y += dayBoxHeight + 10;
       });
 
-      // Footer signature
       y += 8;
       ctx.strokeStyle = '#1e293b';
       ctx.lineWidth = 1;
@@ -2038,26 +2604,199 @@
       ctx.textAlign = 'center';
       ctx.fillStyle = '#94a3b8';
       ctx.font = 'bold 10px monospace';
-      ctx.fillText('Helpline: 6296306487', canvasWidth / 2, y);
+      ctx.fillText('Helpline: 6296306487 • Folder: staminzer/', canvasWidth / 2, y);
 
       ctx.textAlign = 'right';
       ctx.fillStyle = '#64748b';
       ctx.font = '10px sans-serif';
       ctx.fillText('Consistency • Progressive Overload', rightMargin, y);
 
-      // Trigger download
+      return { canvas, memberName };
+    }
+
+    // Mode 1: Direct Download with staminzer/ path prefix
+    function downloadNativeJPG() {
+      closeStaminzerExportModal();
+      const { canvas, memberName } = buildWorkoutCanvas();
       try {
         const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-        const cleanName = athlete.replace(/[^a-zA-Z0-9]/g, '_');
+        const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
         const link = document.createElement('a');
-        link.download = `Staminizer_Workout_${cleanName}.jpg`;
+        link.download = `staminzer/Staminizer_Workout_${cleanName}.jpg`;
         link.href = dataUrl;
+        document.body.appendChild(link);
         link.click();
-        showToast("JPG Routine downloaded!");
+        document.body.removeChild(link);
+        showToast(`Saved to staminzer/Staminizer_Workout_${cleanName}.jpg`);
       } catch (e) {
         console.error("Canvas export error:", e);
         showToast("Canvas export error.");
       }
+    }
+
+    // Mode 2: Auto-create real "staminzer" folder via File System Access API (or fallback to ZIP folder)
+    async function saveDirectlyToStaminzerDirectory() {
+      closeStaminzerExportModal();
+      const { canvas, memberName } = buildWorkoutCanvas();
+      const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
+      const fileName = `Staminizer_Workout_${cleanName}.jpg`;
+
+      if ('showDirectoryPicker' in window) {
+        try {
+          const parentDirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+          const staminzerFolderHandle = await parentDirHandle.getDirectoryHandle('staminzer', { create: true });
+          const fileHandle = await staminzerFolderHandle.getFileHandle(fileName, { create: true });
+          const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
+          const writable = await fileHandle.createWritable();
+          await writable.write(blob);
+          await writable.close();
+          showToast(`Saved inside staminzer/${fileName}!`);
+          return;
+        } catch (err) {
+          if (err.name === 'AbortError') return;
+        }
+      }
+      // Fallback for mobile browsers where showDirectoryPicker is restricted: download real staminzer/ ZIP folder
+      downloadStaminzerFolderZip();
+    }
+
+    // Mode 3: Pure-JS Offline ZIP Builder that creates a genuine "staminzer/" directory containing the JPG & HTML card
+    async function downloadStaminzerFolderZip() {
+      closeStaminzerExportModal();
+      showToast("Packaging staminzer/ folder...");
+      const { canvas, memberName } = buildWorkoutCanvas();
+      const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
+
+      const jpgBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
+      const jpgBuffer = new Uint8Array(await jpgBlob.arrayBuffer());
+
+      const htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${memberName} - Staminizer Routine</title></head><body style="background:#090d16;color:#fff;font-family:sans-serif;padding:20px;">${generateWeeklySummaryHTML()}</body></html>`;
+      const htmlBuffer = new TextEncoder().encode(htmlContent);
+
+      const files = [
+        { name: `staminzer/Staminizer_Workout_${cleanName}.jpg`, data: jpgBuffer },
+        { name: `staminzer/Staminizer_Summary_${cleanName}.html`, data: htmlBuffer }
+      ];
+
+      const zipBlob = buildUncompressedZip(files);
+      const url = URL.createObjectURL(zipBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `staminzer_${cleanName}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      showToast(`Downloaded staminzer/ folder archive!`);
+    }
+
+    // Mode 4: Native Android Share Sheet (Share JPG directly to Gallery / WhatsApp / File Manager)
+    async function shareRoutineOnAndroid() {
+      closeStaminzerExportModal();
+      const { canvas, memberName } = buildWorkoutCanvas();
+      const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
+      const fileName = `Staminizer_Workout_${cleanName}.jpg`;
+
+      try {
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
+        const file = new File([blob], fileName, { type: 'image/jpeg' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            title: `Staminizer Workout - ${memberName}`,
+            text: `Staminizer Gym Workout Matrix for ${memberName} (Folder: staminzer/)`,
+            files: [file]
+          });
+          showToast("Shared routine card!");
+        } else {
+          downloadNativeJPG();
+        }
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          downloadNativeJPG();
+        }
+      }
+    }
+
+    // Lightweight 100% Offline Uncompressed ZIP Archive Generator (Creates `staminzer/` folder structure)
+    function buildUncompressedZip(files) {
+      const crcTable = new Uint32Array(256);
+      for (let i = 0; i < 256; i++) {
+        let c = i;
+        for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+        crcTable[i] = c >>> 0;
+      }
+      function crc32(buf) {
+        let crc = 0xFFFFFFFF;
+        for (let i = 0; i < buf.length; i++) {
+          crc = crcTable[(crc ^ buf[i]) & 0xFF] ^ (crc >>> 8);
+        }
+        return (crc ^ 0xFFFFFFFF) >>> 0;
+      }
+
+      const localHeaders = [];
+      const centralHeaders = [];
+      let offset = 0;
+
+      files.forEach(file => {
+        const nameBytes = new TextEncoder().encode(file.name);
+        const crc = crc32(file.data);
+        const size = file.data.length;
+
+        const localHeader = new Uint8Array(30 + nameBytes.length);
+        const lv = new DataView(localHeader.buffer);
+        lv.setUint32(0, 0x04034b50, true);
+        lv.setUint16(4, 20, true);
+        lv.setUint16(6, 0, true);
+        lv.setUint16(8, 0, true);
+        lv.setUint16(10, 0, true);
+        lv.setUint16(12, 0, true);
+        lv.setUint32(14, crc, true);
+        lv.setUint32(18, size, true);
+        lv.setUint32(22, size, true);
+        lv.setUint16(26, nameBytes.length, true);
+        lv.setUint16(28, 0, true);
+        localHeader.set(nameBytes, 30);
+
+        localHeaders.push(localHeader, file.data);
+
+        const centralHeader = new Uint8Array(46 + nameBytes.length);
+        const cv = new DataView(centralHeader.buffer);
+        cv.setUint32(0, 0x02014b50, true);
+        cv.setUint16(4, 20, true);
+        cv.setUint16(6, 20, true);
+        cv.setUint16(8, 0, true);
+        cv.setUint16(10, 0, true);
+        cv.setUint16(12, 0, true);
+        cv.setUint16(14, 0, true);
+        cv.setUint32(16, crc, true);
+        cv.setUint32(20, size, true);
+        cv.setUint32(24, size, true);
+        cv.setUint16(28, nameBytes.length, true);
+        cv.setUint16(30, 0, true);
+        cv.setUint16(32, 0, true);
+        cv.setUint16(34, 0, true);
+        cv.setUint16(36, 0, true);
+        cv.setUint32(38, 0, true);
+        cv.setUint32(42, offset, true);
+        centralHeader.set(nameBytes, 46);
+
+        centralHeaders.push(centralHeader);
+        offset += localHeader.length + size;
+      });
+
+      const centralSize = centralHeaders.reduce((acc, b) => acc + b.length, 0);
+      const eocd = new Uint8Array(22);
+      const ev = new DataView(eocd.buffer);
+      ev.setUint32(0, 0x06054b50, true);
+      ev.setUint16(4, 0, true);
+      ev.setUint16(6, 0, true);
+      ev.setUint16(8, files.length, true);
+      ev.setUint16(10, files.length, true);
+      ev.setUint32(12, centralSize, true);
+      ev.setUint32(16, offset, true);
+      ev.setUint16(20, 0, true);
+
+      return new Blob([...localHeaders, ...centralHeaders, eocd], { type: 'application/zip' });
     }
 
     // Canvas Rounded Rectangle helper
@@ -2081,7 +2820,6 @@
       if (stroke) ctx.stroke();
     }
 
-    // Launch App on Load
     window.onload = function() {
       initApp();
     };
