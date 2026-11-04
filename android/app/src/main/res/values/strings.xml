@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Staminizer</string>
+    <string name="title_activity_main">Staminizer</string>
+    <string name="package_name">com.staminizer.app</string>
+    <string name="custom_url_scheme">com.staminizer.app</string>
+</resources>
