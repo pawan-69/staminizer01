@@ -41,13 +41,7 @@
       flex-direction: column;
       justify-content: space-between;
       -webkit-font-smoothing: antialiased;
-      padding-bottom: 76px; /* Space for Android sticky bottom bar */
-    }
-
-    @media (min-width: 900px) {
-      body {
-        padding-bottom: 0;
-      }
+      padding-bottom: 76px; /* Space for sticky bottom navigation bar */
     }
 
     /* Scrollbars */
@@ -283,53 +277,6 @@
     @keyframes fadeInView {
       from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Top View Switcher (Visible on Desktop & Tablet, Syncs with Android Bottom Nav) */
-    .top-view-tabs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.45rem;
-      background: #0d131f;
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 0.35rem;
-      margin-bottom: 0.85rem;
-    }
-    .top-tab-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      color: var(--text-muted);
-      padding: 0.55rem 0.5rem;
-      border-radius: 9px;
-      font-size: 0.75rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      transition: all 0.15s ease;
-    }
-    .top-tab-btn:hover {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.03);
-    }
-    .top-tab-btn.active {
-      background: var(--card-bg);
-      border-color: var(--primary);
-      color: #ffffff;
-      box-shadow: 0 2px 10px rgba(244, 63, 94, 0.25);
-    }
-    .top-tab-badge {
-      font-size: 0.64rem;
-      padding: 1px 6px;
-      border-radius: 10px;
-      background: rgba(244, 63, 94, 0.2);
-      color: #fda4af;
-      font-weight: 800;
     }
 
     /* Day Selector Card - Sleek Horizontal Swipe on Android, 7-Grid on Desktop */
@@ -982,11 +929,6 @@
       padding: 0 0.25rem;
       box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.5);
     }
-    @media (min-width: 900px) {
-      .android-bottom-nav {
-        display: none;
-      }
-    }
     .nav-tab-btn {
       background: none;
       border: none;
@@ -1230,7 +1172,7 @@
         color: #000000 !important;
         padding-bottom: 0 !important;
       }
-      header, footer, .top-view-tabs, .app-view-section, .android-bottom-nav, #toast, .modal-backdrop, .no-print {
+      header, footer, .app-view-section, .android-bottom-nav, #toast, .modal-backdrop, .no-print {
         display: none !important;
       }
       #printContainer {
@@ -1323,23 +1265,6 @@
 
   <!-- Main Work Area with Strictly Separated Views -->
   <main>
-    <!-- Top Section Switcher (Separates Exercise Selection from Member Details & Share Hub) -->
-    <div class="top-view-tabs no-print">
-      <button id="topTabWorkout" class="top-tab-btn active" onclick="switchAppView('workout')">
-        <svg class="icon" viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43L20.57 12L17 15.57L8.43 7L12 3.43L10.57 2L9.14 3.43L7.71 2L5.57 4.14L4.14 2.71L2.71 4.14L4.14 5.57L2 7.71L3.43 9.14L2 10.57L3.43 12L7 8.43L15.57 17L12 20.57L13.43 22L14.86 20.57L16.29 22L18.43 19.86L19.86 21.29L21.29 19.86L19.86 18.43L22 16.29L20.57 14.86Z"/></svg>
-        <span>1. Exercises</span>
-      </button>
-      <button id="topTabMember" class="top-tab-btn" onclick="switchAppView('member')">
-        <svg class="icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4s-4 1.79-4 4s1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-        <span>2. Member Info</span>
-        <span id="topTabMemberBadge" class="top-tab-badge">Alex</span>
-      </button>
-      <button id="topTabSummary" class="top-tab-btn" onclick="switchAppView('summary')">
-        <svg class="icon" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
-        <span>3. Review & Share</span>
-      </button>
-    </div>
-
     <!-- =================================================================== -->
     <!-- VIEW 1: WORKOUT BUILDER (EXERCISES ONLY - ZERO MEMBER INFO CLUTTER) -->
     <!-- =================================================================== -->
@@ -1485,16 +1410,17 @@
       <div class="member-card" style="margin-top:0.25rem;">
         <div class="member-card-header">
           <div>
-            <h3 style="font-size:0.95rem; font-weight:800; text-transform:uppercase; color:#fff;">Weekly Split & Direct Share Hub</h3>
-            <p style="font-size:0.72rem; color:var(--text-muted);">Share directly to WhatsApp, Telegram, Drive, or print PDF</p>
+            <h3 style="font-size:0.95rem; font-weight:800; text-transform:uppercase; color:#fff;">Weekly Split & Direct JPG Share Hub</h3>
+            <p style="font-size:0.72rem; color:var(--text-muted);">Share the actual .JPG Routine Image to WhatsApp or save to gallery</p>
           </div>
           <div class="action-group">
             <button onclick="shareRoutineJPG()" class="btn btn-emerald">
               <svg class="icon" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
-              Share Image Card
+              Share JPG to WhatsApp
             </button>
-            <button onclick="shareViaWhatsAppDirect()" class="btn btn-amber">
-              WhatsApp Text
+            <button onclick="downloadNativeJPG()" class="btn btn-amber">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+              Download JPG
             </button>
             <button onclick="triggerNativePrint()" class="btn btn-primary">
               Print / PDF
@@ -1502,121 +1428,91 @@
           </div>
         </div>
 
-        <!-- Formatted Weekly HTML Table Summary -->
-        <div id="inlineWeeklySummaryContainer"></div>
-
-        <!-- Live Rendered JPG Card for Instant Long-Press Share in GitHub APK Wrappers -->
-        <div class="card-preview-frame" style="margin-top:1.2rem;">
+        <!-- Live Rendered JPG Card at the Top for Instant Visual & Long-Press Share -->
+        <div class="card-preview-frame" style="margin-bottom:1.2rem; margin-top:0.2rem;">
           <div style="font-size:0.75rem; color:#34d399; margin-bottom:0.5rem; font-weight:800;">
-            📲 Generated Routine Card Image (Tap "Share Image Card" above or Long-Press image below):
+            🖼️ Generated JPG Routine Card (Tap "Share JPG to WhatsApp" or Long-Press Image -> Share Image):
           </div>
           <img id="inlineSummaryCardImg" alt="Member Routine Card" src="" />
         </div>
+
+        <!-- Formatted Weekly HTML Table Summary -->
+        <div id="inlineWeeklySummaryContainer"></div>
       </div>
     </div>
   </main>
 
-  <!-- Android Sticky Bottom Navigation Bar (Separated Sections + 1-Tap Direct Share) -->
+  <!-- Android Sticky Bottom Navigation Bar (Strictly Separates Sections + 1-Tap Direct Share) -->
   <nav class="android-bottom-nav no-print">
     <button id="bottomNavWorkout" class="nav-tab-btn active-nav" onclick="switchAppView('workout')">
-      <svg class="icon" style="width:18px; height:18px;" viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43L20.57 12L17 15.57L8.43 7L12 3.43L10.57 2L9.14 3.43L7.71 2L5.57 4.14L4.14 2.71L2.71 4.14L4.14 5.57L2 7.71L3.43 9.14L2 10.57L3.43 12L7 8.43L15.57 17L12 20.57L13.43 22L14.86 20.57L16.29 22L18.43 19.86L19.86 21.29L21.29 19.86L19.86 18.43L22 16.29L20.57 14.86Z"/></svg>
+      <svg class="icon" viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43L20.57 12L17 15.57L8.43 7L12 3.43L10.57 2L9.14 3.43L7.71 2L5.57 4.14L4.14 2.71L2.71 4.14L4.14 5.57L2 7.71L3.43 9.14L2 10.57L3.43 12L7 8.43L15.57 17L12 20.57L13.43 22L14.86 20.57L16.29 22L18.43 19.86L19.86 21.29L21.29 19.86L19.86 18.43L22 16.29L20.57 14.86Z"/></svg>
       <span>Exercises</span>
     </button>
     <button id="bottomNavMember" class="nav-tab-btn" onclick="switchAppView('member')">
-      <svg class="icon" style="width:18px; height:18px;" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4s-4 1.79-4 4s1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <svg class="icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4s-4 1.79-4 4s1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
       <span>Member Info</span>
     </button>
     <button id="bottomNavSummary" class="nav-tab-btn" onclick="switchAppView('summary')">
-      <svg class="icon" style="width:18px; height:18px;" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
-      <span>Weekly Split</span>
+      <svg class="icon" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+      <span>Split Card</span>
     </button>
     <button class="nav-tab-btn highlight-share" onclick="shareRoutineJPG()">
-      <svg class="icon" style="width:18px; height:18px;" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
-      <span>Share Card</span>
+      <svg class="icon" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+      <span>Share JPG</span>
     </button>
   </nav>
 
-  <!-- Modal 1: Weekly Summary Review -->
-  <div class="modal-backdrop" id="previewModal">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-title">
-          <svg class="icon" style="color:var(--primary);" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
-          Weekly Member Workout Summary
-        </div>
-        <button class="modal-close" onclick="closePreviewModal()">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </div>
-      <div class="modal-body" id="modalPreviewBody"></div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closePreviewModal()">Close</button>
-        <button class="btn btn-emerald" onclick="shareRoutineJPG()">Share Routine Card</button>
-        <button class="btn btn-primary" onclick="triggerNativePrint()">Print / PDF</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal 2: Direct Share & GitHub APK / WebView Card Hub -->
+  <!-- Direct JPG Image Share & Download Hub Modal -->
   <div class="modal-backdrop" id="staminzerExportModal">
     <div class="modal-box compact-modal">
       <div class="modal-header">
         <div class="modal-title">
-          <svg class="icon" style="color:#34d399;" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
-          Share Routine (<span id="exportMemberNameLabel" style="color:#fda4af;">Alex Vance</span>)
+          <svg class="icon" style="color:#34d399;" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+          JPG Routine Card (<span id="exportMemberNameLabel" style="color:#fda4af;">Alex Vance</span>)
         </div>
         <button class="modal-close" onclick="closeStaminzerExportModal()">
           <svg class="icon" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </div>
       <div class="modal-body">
-        <!-- Option 1: Direct WhatsApp App Deep-Link (Works in 100% of GitHub APK Wrappers) -->
-        <div class="storage-option-card" style="border-color:rgba(16,185,129,0.55);" onclick="shareViaWhatsAppDirect()">
+        <!-- Primary Action 1: Native Image File Share (Sends ONLY .JPG to WhatsApp, zero text) -->
+        <div class="storage-option-card" style="border-color:rgba(16,185,129,0.55);" onclick="forceShareImageFileOnly()">
           <div>
             <div class="storage-opt-title">
-              <svg class="icon" style="color:#34d399;" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
-              Share Directly to WhatsApp
+              <svg class="icon" style="color:#34d399;" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+              Share .JPG Picture to WhatsApp
             </div>
             <div class="storage-opt-desc">
-              Opens WhatsApp immediately with the complete formatted weekly workout split for this member.
+              Sends the actual <span class="folder-path-code" id="previewJpgFileName">staminzer.jpg</span> image file via Android Share Sheet.
             </div>
           </div>
-          <span class="btn btn-emerald" style="padding:0.45rem 0.75rem;">WhatsApp</span>
+          <span class="btn btn-emerald" style="padding:0.45rem 0.75rem;">Share JPG</span>
         </div>
 
-        <!-- Option 2: Native Android Share Sheet (Text / Other Apps) -->
-        <div class="storage-option-card" onclick="shareWorkoutTextSummary()">
+        <!-- Primary Action 2: Blob / APK Bridge JPG Download -->
+        <div class="storage-option-card" style="border-color:rgba(245,158,11,0.55);" onclick="downloadNativeJPG()">
           <div>
             <div class="storage-opt-title">
-              <svg class="icon" style="color:#38bdf8;" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
-              Share / Copy Routine Text
+              <svg class="icon" style="color:#fbbf24;" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+              Download .JPG to Phone
             </div>
             <div class="storage-opt-desc">
-              Invoke system share sheet or copy formatted workout text to clipboard.
+              Saves high-res JPG workout card to your device Gallery / <span class="folder-path-code">Pictures/staminzer</span>.
             </div>
           </div>
-          <span class="btn btn-secondary" style="padding:0.4rem 0.65rem;">Share Text</span>
+          <span class="btn btn-amber" style="padding:0.45rem 0.75rem;">Save JPG</span>
         </div>
 
-        <!-- Option 3: Save Image / Print PDF -->
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:0.65rem;">
-          <button class="btn btn-amber" style="width:100%; justify-content:center; padding:0.6rem;" onclick="downloadNativeJPG()">
-            Save JPG (<span id="previewJpgFileName" style="display:none;"></span>staminzer)
-          </button>
-          <button class="btn btn-primary" style="width:100%; justify-content:center; padding:0.6rem;" onclick="closeStaminzerExportModal(); triggerNativePrint();">
-            Print / Save PDF
-          </button>
-        </div>
-
-        <!-- Live Rendered Image Preview (Allows Long-Press -> Share Image in all Android APK WebViews) -->
+        <!-- Live Rendered Image Preview (100% Guaranteed Long-Press Share in any APK WebView) -->
         <div class="card-preview-frame">
-          <div style="font-size:0.72rem; color:#fde047; margin-bottom:0.45rem; font-weight:700;">
-            💡 <b>Android App Tip:</b> Long-press the workout card image below and tap <b>"Share image"</b> to send the picture directly!
+          <div style="font-size:0.73rem; color:#fde047; margin-bottom:0.45rem; font-weight:700; line-height:1.35;">
+            📲 <b>Guaranteed APK Image Share:</b> If your current APK wrapper blocks buttons, <b>press and hold (long-press) the image below</b> and tap <b>"Share image"</b> — it sends the JPG directly to WhatsApp!
           </div>
           <img id="liveGeneratedCardImg" alt="Staminizer Member Workout Card" src="" />
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" style="justify-content:space-between;">
+        <button class="btn btn-secondary" style="font-size:0.68rem;" onclick="closeStaminzerExportModal(); triggerNativePrint();">Save as PDF</button>
         <button class="btn btn-secondary" onclick="closeStaminzerExportModal()">Close</button>
       </div>
     </div>
@@ -1854,12 +1750,7 @@
       document.getElementById('viewMemberSection').classList.toggle('active-view', viewName === 'member');
       document.getElementById('viewSummarySection').classList.toggle('active-view', viewName === 'summary');
 
-      // Update Top Tab buttons
-      document.getElementById('topTabWorkout').classList.toggle('active', viewName === 'workout');
-      document.getElementById('topTabMember').classList.toggle('active', viewName === 'member');
-      document.getElementById('topTabSummary').classList.toggle('active', viewName === 'summary');
-
-      // Update Android Bottom Nav buttons
+      // Update Bottom Nav buttons
       document.getElementById('bottomNavWorkout').classList.toggle('active-nav', viewName === 'workout');
       document.getElementById('bottomNavMember').classList.toggle('active-nav', viewName === 'member');
       document.getElementById('bottomNavSummary').classList.toggle('active-nav', viewName === 'summary');
@@ -1991,10 +1882,6 @@
     function updateMemberBadges() {
       const name = document.getElementById('member_name').value.trim() || 'Member';
       document.title = `${name} - Staminizer Gym Workout Matrix`;
-
-      const firstName = name.split(/\s+/)[0] || 'Member';
-      const badgeEl = document.getElementById('topTabMemberBadge');
-      if (badgeEl) badgeEl.textContent = firstName.slice(0, 10);
 
       const parts = name.split(/\s+/).filter(Boolean);
       const initials = parts.length >= 2
@@ -2360,55 +2247,31 @@
       }, 2600);
     }
 
-    // Modal 1: Weekly Summary Overview
-    function openPreviewModal() {
-      const modal = document.getElementById('previewModal');
-      const body = document.getElementById('modalPreviewBody');
-      body.innerHTML = generateWeeklySummaryHTML();
-      modal.classList.add('show');
-    }
-
-    function closePreviewModal() {
-      document.getElementById('previewModal').classList.remove('show');
-    }
-
-    // Modal 2: Share & APK Card Preview Hub
-    function openStaminzerExportModal() {
-      const { canvas, memberName } = buildWorkoutCanvas();
-      const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
-      document.getElementById('exportMemberNameLabel').textContent = memberName;
-      document.getElementById('previewJpgFileName').textContent = `staminzer_${cleanName}.jpg`;
-
-      try {
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-        const previewImg = document.getElementById('liveGeneratedCardImg');
-        if (previewImg) previewImg.src = dataUrl;
-      } catch (e) {}
-
-      document.getElementById('staminzerExportModal').classList.add('show');
-    }
-
-    function closeStaminzerExportModal() {
-      document.getElementById('staminzerExportModal').classList.remove('show');
-    }
-
-    // Primary 1-Tap Direct Share Action (Attempts Native Android Image Share immediately, opens Share Hub with Live Preview if WebView blocks file blobs)
+    // Primary 1-Tap Direct Share Action (Strictly shares ONLY the .JPG file, never plain text)
     async function shareRoutineJPG() {
       const { canvas, memberName } = buildWorkoutCanvas();
       const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
-      const fileName = `staminzer_${cleanName}.jpg`;
+      const fileName = `staminzer_Workout_${cleanName}.jpg`;
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
 
+      // 1. Check if running inside a Native Android APK WebView Bridge that supports Base64 image sharing
+      if (window.Android && typeof window.Android.shareImage === 'function') {
+        window.Android.shareImage(dataUrl, fileName);
+        return;
+      }
+
+      // 2. Standard Web Share API Level 2 (Shares actual .JPG binary file to WhatsApp)
       try {
         const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
         if (blob && window.File && navigator.share) {
           const file = new File([blob], fileName, { type: 'image/jpeg' });
+          // CRITICAL: Pass ONLY `files: [file]` without `text` or `url`!
+          // If `text` is included alongside `files`, WhatsApp on Android often ignores the image and only pastes the text!
           if (!navigator.canShare || navigator.canShare({ files: [file] })) {
             await navigator.share({
-              title: `Staminizer Workout - ${memberName}`,
-              text: `Staminizer Gym Workout Matrix for Member: ${memberName} (Helpline: 6296306487)`,
               files: [file]
             });
-            showToast("Routine card shared!");
+            showToast("JPG Image sent to Share sheet!");
             return;
           }
         }
@@ -2416,8 +2279,29 @@
         if (err && err.name === 'AbortError') return;
       }
 
-      // Fallback for GitHub Android APK WebViews that block binary file blobs in navigator.share
+      // 3. If the APK WebView blocks navigator.share({files}), open the JPG Preview Modal
       openStaminzerExportModal();
+    }
+
+    // Explicit trigger from inside the modal to test native file sharing or guide user
+    async function forceShareImageFileOnly() {
+      const { canvas, memberName } = buildWorkoutCanvas();
+      const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
+      const fileName = `staminzer_Workout_${cleanName}.jpg`;
+
+      try {
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
+        if (blob && window.File && navigator.share) {
+          const file = new File([blob], fileName, { type: 'image/jpeg' });
+          await navigator.share({ files: [file] });
+          showToast("JPG Image shared!");
+          return;
+        }
+      } catch (err) {
+        if (err && err.name === 'AbortError') return;
+      }
+
+      showToast("Your APK WebView blocks file sharing. Long-press the card image below and tap 'Share image'!");
     }
 
     function shareViaWhatsAppDirect() {
@@ -2754,7 +2638,7 @@
       ctx.textAlign = 'center';
       ctx.fillStyle = '#94a3b8';
       ctx.font = 'bold 10px monospace';
-      ctx.fillText('Helpline: 6296306487 • Folder: staminzer/', canvasWidth / 2, y);
+      ctx.fillText('Helpline: 6296306487 | Folder: staminzer/', canvasWidth / 2, y);
 
       ctx.textAlign = 'right';
       ctx.fillStyle = '#64748b';
@@ -2764,28 +2648,42 @@
       return { canvas, memberName };
     }
 
-    // Direct Save with staminzer prefix
-    function downloadNativeJPG() {
+    // Enhanced Multi-Fallback JPG Download (Supports Blob URLs, Android Bridges & Browser Downloads)
+    async function downloadNativeJPG() {
       const { canvas, memberName } = buildWorkoutCanvas();
-      try {
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-        const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
-        const fileName = `staminzer_Workout_${cleanName}.jpg`;
+      const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
+      const fileName = `staminzer_Workout_${cleanName}.jpg`;
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
 
-        const link = document.createElement('a');
-        link.download = fileName;
-        link.href = dataUrl;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        showToast(`Saved ${fileName}!`);
-      } catch (e) {
-        console.error("Canvas export error:", e);
-        showToast("Long-press the preview image below to save.");
+      if (window.Android && typeof window.Android.saveImage === 'function') {
+        window.Android.saveImage(dataUrl, fileName);
+        showToast(`Saved ${fileName} to Gallery!`);
+        return;
       }
+
+      try {
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
+        if (blob) {
+          const blobUrl = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 6000);
+          showToast(`Downloading ${fileName}...`);
+          return;
+        }
+      } catch (e) {
+        console.error("Blob download error:", e);
+      }
+
+      openStaminzerExportModal();
+      showToast("Long-press routine card image to Save or Share!");
     }
 
-    // Build Plain-Text Routine Summary for WhatsApp / SMS Sharing (Works in 100% of Android APK WebViews)
+    // Build Plain-Text Routine Summary for WhatsApp / SMS Sharing
     function buildWorkoutTextSummary() {
       const memberName = document.getElementById('member_name').value.trim() || 'Member';
       const age = document.getElementById('member_age').value || '-';
@@ -2797,7 +2695,7 @@
       let lines = [];
       lines.push(`🏋️ *STAMINIZER WORKOUT MATRIX*`);
       lines.push(`📍 Nazrul Ashrampara, Near Maya Nursing Home, Siliguri 734001`);
-      lines.push(`📞 Helpline: 6296306487`);
+      lines.push(`📞 Helpline: 6296306487 | Folder: staminzer/`);
       lines.push(`────────────────────`);
       lines.push(`👤 *Member's Name:* ${memberName}`);
       lines.push(`📊 *Bio:* ${age} yrs | ${height} | ${weight}`);
@@ -2846,7 +2744,6 @@
         }
       }
 
-      // Fallback: Copy to clipboard for instant pasting into WhatsApp
       const ta = document.createElement('textarea');
       ta.value = text;
       ta.style.position = 'fixed';
@@ -2862,30 +2759,24 @@
       document.body.removeChild(ta);
     }
 
-    // Native Android Share Sheet (Share JPG directly to WhatsApp / Gallery / File Manager)
-    async function shareRoutineOnAndroid() {
-      const { canvas, memberName } = buildWorkoutCanvas();
+    // Modal Control Helpers
+    function openStaminzerExportModal() {
+      const memberName = document.getElementById('member_name').value.trim() || 'Member';
+      document.getElementById('exportMemberNameLabel').textContent = memberName;
       const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
-      const fileName = `staminzer_Workout_${cleanName}.jpg`;
+      document.getElementById('previewJpgFileName').textContent = `staminzer/Staminizer_Workout_${cleanName}.jpg`;
 
       try {
-        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
-        const file = new File([blob], fileName, { type: 'image/jpeg' });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            title: `Staminizer Workout - ${memberName}`,
-            text: `Staminizer Gym Workout Matrix for Member: ${memberName} (Tel: 6296306487)`,
-            files: [file]
-          });
-          showToast("Shared routine card!");
-          return;
-        }
-      } catch (err) {
-        if (err.name === 'AbortError') return;
-      }
+        const { canvas } = buildWorkoutCanvas();
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+        document.getElementById('liveGeneratedCardImg').src = dataUrl;
+      } catch (e) {}
 
-      // Fallback if the APK wrapper doesn't support binary file sharing: try text share or direct image save
-      showToast("Tip: Long-press the preview image below to Share/Save in your APK!");
+      document.getElementById('staminzerExportModal').classList.add('show');
+    }
+
+    function closeStaminzerExportModal() {
+      document.getElementById('staminzerExportModal').classList.remove('show');
     }
 
     // Canvas Rounded Rectangle helper
