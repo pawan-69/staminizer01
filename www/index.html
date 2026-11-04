@@ -272,61 +272,64 @@
       }
     }
 
-    /* Quick Member Mini-Banner (Android Top Bar Context) */
-    .member-quick-bar {
-      background: linear-gradient(90deg, rgba(17, 24, 39, 0.95), rgba(22, 32, 50, 0.95));
+    /* Dedicated View Tabs Architecture (Strict Separation of Views) */
+    .app-view-section {
+      display: none;
+      animation: fadeInView 0.18s ease-out;
+    }
+    .app-view-section.active-view {
+      display: block;
+    }
+    @keyframes fadeInView {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Top View Switcher (Visible on Desktop & Tablet, Syncs with Android Bottom Nav) */
+    .top-view-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.45rem;
+      background: #0d131f;
       border: 1px solid var(--border-color);
       border-radius: 12px;
-      padding: 0.55rem 0.8rem;
-      margin-bottom: 0.65rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-      flex-wrap: wrap;
+      padding: 0.35rem;
+      margin-bottom: 0.85rem;
     }
-    .member-quick-info {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.78rem;
-      min-width: 0;
-    }
-    .member-avatar-pill {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: rgba(244, 63, 94, 0.2);
-      border: 1px solid rgba(244, 63, 94, 0.45);
-      color: #fda4af;
+    .top-tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 0.55rem 0.5rem;
+      border-radius: 9px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
-      font-size: 0.7rem;
-      flex-shrink: 0;
-    }
-    .member-quick-actions {
-      display: flex;
-      align-items: center;
       gap: 0.4rem;
+      transition: all 0.15s ease;
     }
-    .mini-action-pill {
-      background: #090e17;
-      border: 1px solid #334155;
-      color: #cbd5e1;
-      font-size: 0.68rem;
-      font-weight: 700;
-      padding: 0.28rem 0.6rem;
-      border-radius: 6px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .mini-action-pill:hover {
-      border-color: var(--primary);
+    .top-tab-btn:hover {
       color: #fff;
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .top-tab-btn.active {
+      background: var(--card-bg);
+      border-color: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 10px rgba(244, 63, 94, 0.25);
+    }
+    .top-tab-badge {
+      font-size: 0.64rem;
+      padding: 1px 6px;
+      border-radius: 10px;
+      background: rgba(244, 63, 94, 0.2);
+      color: #fda4af;
+      font-weight: 800;
     }
 
     /* Day Selector Card - Sleek Horizontal Swipe on Android, 7-Grid on Desktop */
@@ -852,13 +855,12 @@
 
     /* Member Profile Section */
     .member-card {
-      margin-top: 1.25rem;
+      margin-top: 0.25rem;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 14px;
-      padding: 1rem;
+      padding: 1.15rem;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
-      scroll-margin-top: 70px;
     }
     .member-card-header {
       display: flex;
@@ -970,7 +972,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      height: 64px;
+      height: 66px;
       background: rgba(15, 23, 42, 0.98);
       border-top: 1px solid #243044;
       backdrop-filter: blur(12px);
@@ -1000,16 +1002,21 @@
       border-radius: 8px;
       margin: 4px 2px;
       transition: all 0.15s ease;
+      position: relative;
+    }
+    .nav-tab-btn.active-nav {
+      color: #ffffff;
+      background: rgba(244, 63, 94, 0.16);
+      border: 1px solid rgba(244, 63, 94, 0.4);
     }
     .nav-tab-btn:active {
       background: rgba(255, 255, 255, 0.06);
       transform: scale(0.95);
     }
-    .nav-tab-btn.highlight-amber {
-      color: #fbbf24;
-    }
-    .nav-tab-btn.highlight-rose {
-      color: #fb7185;
+    .nav-tab-btn.highlight-share {
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
     }
 
     /* Toast Notification */
@@ -1165,6 +1172,41 @@
       border-radius: 4px;
     }
 
+    /* Rendered Card Image Preview for APK / WebView Long-Press & Direct Share */
+    .card-preview-frame {
+      background: #06090f;
+      border: 1px solid #243044;
+      border-radius: 10px;
+      padding: 0.6rem;
+      margin-top: 0.6rem;
+      text-align: center;
+    }
+    .card-preview-frame img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      display: block;
+      margin: 0 auto;
+      -webkit-touch-callout: default;
+      user-select: auto;
+    }
+    .quick-name-inline-input {
+      background: #090e17;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.8rem;
+      padding: 0.25rem 0.5rem;
+      width: 155px;
+      outline: none;
+      font-family: inherit;
+    }
+    .quick-name-inline-input:focus {
+      border-color: var(--primary);
+    }
+
     /* Footer */
     footer {
       background: #070a10;
@@ -1188,7 +1230,7 @@
         color: #000000 !important;
         padding-bottom: 0 !important;
       }
-      header, footer, .member-quick-bar, .day-selector-card, .filter-card, .overview-bar, .muscle-columns-grid, .member-card, .android-bottom-nav, #toast, .modal-backdrop, .no-print {
+      header, footer, .top-view-tabs, .app-view-section, .android-bottom-nav, #toast, .modal-backdrop, .no-print {
         display: none !important;
       }
       #printContainer {
@@ -1243,9 +1285,9 @@
         <div class="brand-text-col">
           <div class="brand-title-row">
             <h1 class="brand-title">STAMIN<span style="color:var(--primary);">IZER</span></h1>
-            <span class="folder-pill-badge" onclick="openStaminzerExportModal()" title="Media Storage Folder">
-              <svg class="icon" style="width:11px; height:11px;" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-              staminzer/
+            <span class="folder-pill-badge" onclick="shareRoutineJPG()" title="Share Routine Card Directly">
+              <svg class="icon" style="width:11px; height:11px;" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+              Direct Share
             </span>
           </div>
           <p class="brand-sub" onclick="this.classList.toggle('expanded')" title="Tap to expand full gym address">
@@ -1256,19 +1298,19 @@
 
       <div class="header-actions">
         <a href="tel:6296306487" class="phone-badge" title="Call Staminizer Gym">
-          <svg class="icon" style="width:13px; height:13px; color:#f43f5e;" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24c1.12.37 2.33.57 3.57.57c.55 0 1 .45 1 1V20c0 .55-.45 1-1 1c-9.39 0-17-7.61-17-17c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1c0 1.25.2 2.45.57 3.57c.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          <svg class="icon" style="width:13px; height:13px; color:#f43f5e;" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 3.76 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24c1.12.37 2.33.57 3.57.57c.55 0 1 .45 1 1V20c0 .55-.45 1-1 1c-9.39 0-17-7.61-17-17c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1c0 1.25.2 2.45.57 3.57c.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
           <span>6296306487</span>
         </a>
 
-        <!-- Desktop Action Buttons (Moved to Bottom Bar on Android to prevent header clutter) -->
+        <!-- Desktop Action Buttons -->
         <div class="desktop-only-actions">
           <button onclick="clearCurrentDay()" class="btn btn-secondary">
             <svg class="icon" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
             Reset Day
           </button>
-          <button onclick="openStaminzerExportModal()" class="btn btn-amber">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-            Save to staminzer/
+          <button onclick="shareRoutineJPG()" class="btn btn-emerald">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+            Share Routine Card
           </button>
           <button onclick="triggerNativePrint()" class="btn btn-primary">
             <svg class="icon" viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1s1 .45 1 1s-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
@@ -1279,173 +1321,218 @@
     </div>
   </header>
 
-  <!-- Main Work Area -->
+  <!-- Main Work Area with Strictly Separated Views -->
   <main>
-    <!-- Compact Member Quick Bar -->
-    <div class="member-quick-bar">
-      <div class="member-quick-info">
-        <div class="member-avatar-pill" id="quickMemberInitials">AV</div>
-        <div style="min-width:0;">
-          <div style="font-size:0.65rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Member's Name</div>
-          <div style="font-weight:800; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="quickMemberNameDisplay">Alex Vance</div>
-        </div>
-      </div>
-      <div class="member-quick-actions">
-        <button class="mini-action-pill" onclick="scrollToMemberProfile()">
-          <svg class="icon" style="width:12px; height:12px; color:#fbbf24;" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-          Edit Member
-        </button>
-        <button class="mini-action-pill" onclick="clearCurrentDay()" title="Reset current day exercises">
-          <svg class="icon" style="width:12px; height:12px; color:#f43f5e;" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
-          Reset Day
-        </button>
-      </div>
+    <!-- Top Section Switcher (Separates Exercise Selection from Member Details & Share Hub) -->
+    <div class="top-view-tabs no-print">
+      <button id="topTabWorkout" class="top-tab-btn active" onclick="switchAppView('workout')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43L20.57 12L17 15.57L8.43 7L12 3.43L10.57 2L9.14 3.43L7.71 2L5.57 4.14L4.14 2.71L2.71 4.14L4.14 5.57L2 7.71L3.43 9.14L2 10.57L3.43 12L7 8.43L15.57 17L12 20.57L13.43 22L14.86 20.57L16.29 22L18.43 19.86L19.86 21.29L21.29 19.86L19.86 18.43L22 16.29L20.57 14.86Z"/></svg>
+        <span>1. Exercises</span>
+      </button>
+      <button id="topTabMember" class="top-tab-btn" onclick="switchAppView('member')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4s-4 1.79-4 4s1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        <span>2. Member Info</span>
+        <span id="topTabMemberBadge" class="top-tab-badge">Alex</span>
+      </button>
+      <button id="topTabSummary" class="top-tab-btn" onclick="switchAppView('summary')">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+        <span>3. Review & Share</span>
+      </button>
     </div>
 
-    <!-- Day Selector Ribbon (Swipeable on Android) -->
-    <section class="day-selector-card">
-      <div class="day-selector-header">
-        <span style="display:flex; align-items:center; gap:5px;">
-          <svg class="icon" style="color:var(--primary); width:13px; height:13px;" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
-          Select Workout Day
-        </span>
-        <span id="activeDayStats" style="color:#34d399; font-weight:800;">0 exercises active</span>
-      </div>
-      <div class="day-grid no-scrollbar" id="dayTabsContainer"></div>
-    </section>
+    <!-- =================================================================== -->
+    <!-- VIEW 1: WORKOUT BUILDER (EXERCISES ONLY - ZERO MEMBER INFO CLUTTER) -->
+    <!-- =================================================================== -->
+    <div id="viewWorkoutSection" class="app-view-section active-view">
+      <!-- Day Selector Ribbon (Swipeable on Android) -->
+      <section class="day-selector-card">
+        <div class="day-selector-header">
+          <span style="display:flex; align-items:center; gap:5px;">
+            <svg class="icon" style="color:var(--primary); width:13px; height:13px;" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
+            Select Workout Day
+          </span>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span id="activeDayStats" style="color:#34d399; font-weight:800;">0 active</span>
+            <button onclick="clearCurrentDay()" class="text-link-btn" style="color:#fda4af; text-decoration:none; font-size:0.68rem;">Reset Day</button>
+          </div>
+        </div>
+        <div class="day-grid no-scrollbar" id="dayTabsContainer"></div>
+      </section>
 
-    <!-- Target Body Part Filter & Search Bar -->
-    <section class="filter-card">
-      <div class="filter-controls-top">
-        <div class="search-input-wrap">
-          <svg class="icon search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-          <input type="text" id="exerciseSearchInput" class="search-input" placeholder="Search exercise name..." oninput="onSearchExercises(this.value)">
-          <button id="clearSearchBtn" class="clear-search-btn" onclick="clearSearchInput()">
-            <svg class="icon" style="width:14px; height:14px;" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      <!-- Target Body Part Filter & Search Bar -->
+      <section class="filter-card">
+        <div class="filter-controls-top">
+          <div class="search-input-wrap">
+            <svg class="icon search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" id="exerciseSearchInput" class="search-input" placeholder="Search exercise name..." oninput="onSearchExercises(this.value)">
+            <button id="clearSearchBtn" class="clear-search-btn" onclick="clearSearchInput()">
+              <svg class="icon" style="width:14px; height:14px;" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+          </div>
+          <button id="activeOnlyBtn" class="active-only-toggle" onclick="toggleShowActiveOnly()">
+            <svg class="icon" style="width:13px; height:13px;" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            Selected Only
           </button>
         </div>
-        <button id="activeOnlyBtn" class="active-only-toggle" onclick="toggleShowActiveOnly()">
-          <svg class="icon" style="width:13px; height:13px;" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-          Selected Only
-        </button>
-      </div>
-      <div class="filter-chip-container no-scrollbar" id="filterChipContainer"></div>
-    </section>
+        <div class="filter-chip-container no-scrollbar" id="filterChipContainer"></div>
+      </section>
 
-    <!-- Overview Bar -->
-    <div class="overview-bar">
-      <div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
-        <span style="color:var(--text-muted);">Focus (<b id="currentDayNameLabel" style="color:#fda4af; text-transform:uppercase;">Monday</b>):</span>
-        <span id="dayTargetBadges" style="display:inline-flex; gap:4px; flex-wrap:wrap;"></span>
+      <!-- Overview Bar -->
+      <div class="overview-bar">
+        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
+          <span style="color:var(--text-muted);">Focus (<b id="currentDayNameLabel" style="color:#fda4af; text-transform:uppercase;">Monday</b>):</span>
+          <span id="dayTargetBadges" style="display:inline-flex; gap:4px; flex-wrap:wrap;"></span>
+        </div>
+        <div class="accordion-bulk-actions">
+          <button class="text-link-btn" onclick="setAllAccordions(false)">Expand All</button>
+          <span style="color:#334155;">|</span>
+          <button class="text-link-btn" onclick="setAllAccordions(true)">Collapse All</button>
+        </div>
       </div>
-      <div class="accordion-bulk-actions">
-        <button class="text-link-btn" onclick="setAllAccordions(false)">Expand All</button>
-        <span style="color:#334155;">|</span>
-        <button class="text-link-btn" onclick="setAllAccordions(true)">Collapse All</button>
-      </div>
+
+      <!-- Muscle Columns Grid (Collapsible Accordions) -->
+      <div class="muscle-columns-grid" id="muscleGroupsGrid"></div>
     </div>
 
-    <!-- Muscle Columns Grid (Collapsible Accordions for Clutter-Free Android Experience) -->
-    <div class="muscle-columns-grid" id="muscleGroupsGrid"></div>
-
-    <!-- Member Profile Section with Body Type -->
-    <section class="member-card" id="memberProfileSection">
-      <div class="member-card-header">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <div style="width:30px; height:30px; border-radius:8px; background:rgba(245,158,11,0.2); color:#fbbf24; display:flex; align-items:center; justify-content:center;">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4s-4 1.79-4 4s1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    <!-- =================================================================== -->
+    <!-- VIEW 2: DEDICATED MEMBER DETAILS SECTION (SEPARATE FROM EXERCISES)  -->
+    <!-- =================================================================== -->
+    <div id="viewMemberSection" class="app-view-section">
+      <section class="member-card" id="memberProfileSection">
+        <div class="member-card-header">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:rgba(245,158,11,0.2); color:#fbbf24; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:0.9rem;" id="memberAvatarInitials">
+              AV
+            </div>
+            <div>
+              <h3 style="font-size:0.95rem; font-weight:800; text-transform:uppercase;">Member Details & Somatotype</h3>
+              <p style="font-size:0.72rem; color:var(--text-muted);">Dedicated member profile stamped onto shared routine cards</p>
+            </div>
           </div>
+          <div style="font-size:0.75rem; color:#fda4af; font-family:monospace; font-weight:700;">STAMINIZER GYM : 6296306487</div>
+        </div>
+
+        <div class="member-grid">
+          <div class="form-group full-width-mobile">
+            <label>Member's Name</label>
+            <input type="text" id="member_name" value="Alex Vance" placeholder="Enter Member's Name" oninput="persistData(); updateMemberBadges();">
+          </div>
+          <div class="form-group">
+            <label>Age</label>
+            <input type="number" id="member_age" value="26" placeholder="Years" oninput="persistData()">
+          </div>
+          <div class="form-group">
+            <label>Height</label>
+            <input type="text" id="member_height" value="5 ft 10 in" placeholder="e.g. 5'10 / 178cm" oninput="persistData()">
+          </div>
+          <div class="form-group">
+            <label>Weight</label>
+            <input type="text" id="member_weight" value="78 kg" placeholder="e.g. 78 kg" oninput="persistData()">
+          </div>
+          <div class="form-group full-width-mobile">
+            <label>Body Type (Somatotype)</label>
+            <select id="member_bodytype" onchange="onBodyTypeChanged()">
+              <option value="Mesomorph">Mesomorph (Athletic & Muscular)</option>
+              <option value="Ectomorph">Ectomorph (Lean & Fast Metabolism)</option>
+              <option value="Endomorph">Endomorph (Solid & Slower Metabolism)</option>
+            </select>
+          </div>
+          <div class="form-group full-width-mobile">
+            <label>Primary Goal</label>
+            <select id="member_goal" onchange="persistData()">
+              <option value="Hypertrophy (Muscle Gain)">Hypertrophy (Muscle Gain)</option>
+              <option value="Max Strength & Power">Max Strength & Power</option>
+              <option value="Fat Loss & Lean Definition">Fat Loss & Lean Definition</option>
+              <option value="Endurance & Conditioning">Endurance & Conditioning</option>
+              <option value="Athletic Performance">Athletic Performance</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Somatotype Specific Insight Box -->
+        <div class="bodytype-guidance">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="bodytype-badge" id="bodyTypeBadge">
+              <svg class="icon" style="width:12px; height:12px;" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <span id="badgeTypeName">Mesomorph</span>
+            </span>
+            <span style="font-size:0.75rem; font-weight:700; color:#fff;">Physique Directive:</span>
+          </div>
+          <div class="bodytype-info-text" id="bodyTypeTip">
+            Naturally athletic response: Respond best to progressive overload, moderate-to-heavy hypertrophy splits, and balanced macronutrient distribution.
+          </div>
+        </div>
+
+        <div class="member-card-footer">
+          <div style="font-size:0.73rem; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
+            <svg class="icon" style="color:#10b981; width:14px; height:14px;" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            Member details auto-saved offline
+          </div>
+
+          <div class="action-group">
+            <button onclick="switchAppView('workout')" class="btn btn-secondary">Back to Exercises</button>
+            <button onclick="switchAppView('summary')" class="btn btn-amber">Review Weekly Split</button>
+            <button onclick="shareRoutineJPG()" class="btn btn-emerald">Share Routine Card</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- VIEW 3: WEEKLY SUMMARY & DIRECT SHARE HUB                           -->
+    <!-- =================================================================== -->
+    <div id="viewSummarySection" class="app-view-section">
+      <div class="member-card" style="margin-top:0.25rem;">
+        <div class="member-card-header">
           <div>
-            <h3 style="font-size:0.9rem; font-weight:800; text-transform:uppercase;">Member Profile & Somatotype</h3>
-            <p style="font-size:0.68rem; color:var(--text-muted);">Member credentials stamped onto <code style="color:#34d399;">staminzer/</code> exported JPG & PDF cards</p>
+            <h3 style="font-size:0.95rem; font-weight:800; text-transform:uppercase; color:#fff;">Weekly Split & Direct Share Hub</h3>
+            <p style="font-size:0.72rem; color:var(--text-muted);">Share directly to WhatsApp, Telegram, Drive, or print PDF</p>
+          </div>
+          <div class="action-group">
+            <button onclick="shareRoutineJPG()" class="btn btn-emerald">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+              Share Image Card
+            </button>
+            <button onclick="shareViaWhatsAppDirect()" class="btn btn-amber">
+              WhatsApp Text
+            </button>
+            <button onclick="triggerNativePrint()" class="btn btn-primary">
+              Print / PDF
+            </button>
           </div>
         </div>
-        <div style="font-size:0.72rem; color:#fda4af; font-family:monospace; font-weight:700;">STAMINIZER GYM : 6296306487</div>
-      </div>
 
-      <div class="member-grid">
-        <div class="form-group full-width-mobile">
-          <label>Member's Name</label>
-          <input type="text" id="member_name" value="Alex Vance" placeholder="Enter Member's Name" oninput="persistData(); updateMemberQuickBar();">
-        </div>
-        <div class="form-group">
-          <label>Age</label>
-          <input type="number" id="member_age" value="26" placeholder="Years" oninput="persistData()">
-        </div>
-        <div class="form-group">
-          <label>Height</label>
-          <input type="text" id="member_height" value="5 ft 10 in" placeholder="e.g. 5'10 / 178cm" oninput="persistData()">
-        </div>
-        <div class="form-group">
-          <label>Weight</label>
-          <input type="text" id="member_weight" value="78 kg" placeholder="e.g. 78 kg" oninput="persistData()">
-        </div>
-        <div class="form-group full-width-mobile">
-          <label>Body Type (Somatotype)</label>
-          <select id="member_bodytype" onchange="onBodyTypeChanged()">
-            <option value="Mesomorph">Mesomorph (Athletic & Muscular)</option>
-            <option value="Ectomorph">Ectomorph (Lean & Fast Metabolism)</option>
-            <option value="Endomorph">Endomorph (Solid & Slower Metabolism)</option>
-          </select>
-        </div>
-        <div class="form-group full-width-mobile">
-          <label>Primary Goal</label>
-          <select id="member_goal" onchange="persistData()">
-            <option value="Hypertrophy (Muscle Gain)">Hypertrophy (Muscle Gain)</option>
-            <option value="Max Strength & Power">Max Strength & Power</option>
-            <option value="Fat Loss & Lean Definition">Fat Loss & Lean Definition</option>
-            <option value="Endurance & Conditioning">Endurance & Conditioning</option>
-            <option value="Athletic Performance">Athletic Performance</option>
-          </select>
+        <!-- Formatted Weekly HTML Table Summary -->
+        <div id="inlineWeeklySummaryContainer"></div>
+
+        <!-- Live Rendered JPG Card for Instant Long-Press Share in GitHub APK Wrappers -->
+        <div class="card-preview-frame" style="margin-top:1.2rem;">
+          <div style="font-size:0.75rem; color:#34d399; margin-bottom:0.5rem; font-weight:800;">
+            📲 Generated Routine Card Image (Tap "Share Image Card" above or Long-Press image below):
+          </div>
+          <img id="inlineSummaryCardImg" alt="Member Routine Card" src="" />
         </div>
       </div>
-
-      <!-- Somatotype Specific Insight Box -->
-      <div class="bodytype-guidance">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span class="bodytype-badge" id="bodyTypeBadge">
-            <svg class="icon" style="width:12px; height:12px;" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <span id="badgeTypeName">Mesomorph</span>
-          </span>
-          <span style="font-size:0.73rem; font-weight:700; color:#fff;">Physique Directive:</span>
-        </div>
-        <div class="bodytype-info-text" id="bodyTypeTip">
-          Naturally athletic response: Respond best to progressive overload, moderate-to-heavy hypertrophy splits, and balanced macronutrient distribution.
-        </div>
-      </div>
-
-      <div class="member-card-footer">
-        <div style="font-size:0.72rem; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
-          <svg class="icon" style="color:#10b981; width:14px; height:14px;" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-          Auto-saved offline • Folder target: <code class="folder-path-code">staminzer/</code>
-        </div>
-
-        <div class="action-group">
-          <button onclick="openPreviewModal()" class="btn btn-secondary">Weekly Summary</button>
-          <button onclick="openStaminzerExportModal()" class="btn btn-amber">Save to staminzer/</button>
-          <button onclick="triggerNativePrint()" class="btn btn-primary">Print / PDF Card</button>
-        </div>
-      </div>
-    </section>
+    </div>
   </main>
 
-  <!-- Android Native-Style Sticky Bottom Action Bar -->
+  <!-- Android Sticky Bottom Navigation Bar (Separated Sections + 1-Tap Direct Share) -->
   <nav class="android-bottom-nav no-print">
-    <button class="nav-tab-btn" onclick="scrollToMemberProfile()">
+    <button id="bottomNavWorkout" class="nav-tab-btn active-nav" onclick="switchAppView('workout')">
+      <svg class="icon" style="width:18px; height:18px;" viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43L20.57 12L17 15.57L8.43 7L12 3.43L10.57 2L9.14 3.43L7.71 2L5.57 4.14L4.14 2.71L2.71 4.14L4.14 5.57L2 7.71L3.43 9.14L2 10.57L3.43 12L7 8.43L15.57 17L12 20.57L13.43 22L14.86 20.57L16.29 22L18.43 19.86L19.86 21.29L21.29 19.86L19.86 18.43L22 16.29L20.57 14.86Z"/></svg>
+      <span>Exercises</span>
+    </button>
+    <button id="bottomNavMember" class="nav-tab-btn" onclick="switchAppView('member')">
       <svg class="icon" style="width:18px; height:18px;" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4s-4 1.79-4 4s1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-      <span>Member</span>
+      <span>Member Info</span>
     </button>
-    <button class="nav-tab-btn" onclick="openPreviewModal()">
+    <button id="bottomNavSummary" class="nav-tab-btn" onclick="switchAppView('summary')">
       <svg class="icon" style="width:18px; height:18px;" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
-      <span>Summary</span>
+      <span>Weekly Split</span>
     </button>
-    <button class="nav-tab-btn highlight-amber" onclick="openStaminzerExportModal()">
-      <svg class="icon" style="width:18px; height:18px;" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-      <span>staminzer/ JPG</span>
-    </button>
-    <button class="nav-tab-btn highlight-rose" onclick="triggerNativePrint()">
-      <svg class="icon" style="width:18px; height:18px;" viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1s1 .45 1 1s-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
-      <span>PDF / Print</span>
+    <button class="nav-tab-btn highlight-share" onclick="shareRoutineJPG()">
+      <svg class="icon" style="width:18px; height:18px;" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+      <span>Share Card</span>
     </button>
   </nav>
 
@@ -1464,87 +1551,73 @@
       <div class="modal-body" id="modalPreviewBody"></div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closePreviewModal()">Close</button>
-        <button class="btn btn-amber" onclick="openStaminzerExportModal()">Save to staminzer/</button>
+        <button class="btn btn-emerald" onclick="shareRoutineJPG()">Share Routine Card</button>
         <button class="btn btn-primary" onclick="triggerNativePrint()">Print / PDF</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal 2: "staminzer" Folder Media Storage Hub -->
+  <!-- Modal 2: Direct Share & GitHub APK / WebView Card Hub -->
   <div class="modal-backdrop" id="staminzerExportModal">
     <div class="modal-box compact-modal">
       <div class="modal-header">
         <div class="modal-title">
-          <svg class="icon" style="color:#fbbf24;" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-          Save Media to <code class="folder-path-code" style="font-size:0.85rem;">staminzer/</code>
+          <svg class="icon" style="color:#34d399;" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+          Share Routine (<span id="exportMemberNameLabel" style="color:#fda4af;">Alex Vance</span>)
         </div>
         <button class="modal-close" onclick="closeStaminzerExportModal()">
           <svg class="icon" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </div>
       <div class="modal-body">
-        <div style="font-size:0.75rem; color:#cbd5e1; margin-bottom:0.8rem; line-height:1.4;">
-          Export workout card for <b id="exportMemberNameLabel" style="color:#fda4af;">Alex Vance</b> into your <span class="folder-path-code">staminzer</span> folder:
-        </div>
-
-        <!-- Option 1: Direct JPG Download with staminzer/ path -->
-        <div class="storage-option-card" onclick="downloadNativeJPG()">
+        <!-- Option 1: Direct WhatsApp App Deep-Link (Works in 100% of GitHub APK Wrappers) -->
+        <div class="storage-option-card" style="border-color:rgba(16,185,129,0.55);" onclick="shareViaWhatsAppDirect()">
           <div>
             <div class="storage-opt-title">
-              <svg class="icon" style="color:#fbbf24;" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
-              Quick Download JPG (<span class="folder-path-code">staminzer/</span>)
+              <svg class="icon" style="color:#34d399;" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+              Share Directly to WhatsApp
             </div>
             <div class="storage-opt-desc">
-              Downloads high-resolution workout routine card named <code id="previewJpgFileName" style="color:#e2e8f0;">staminzer/Staminizer_Alex_Vance.jpg</code>.
+              Opens WhatsApp immediately with the complete formatted weekly workout split for this member.
             </div>
           </div>
-          <span class="btn btn-amber" style="padding:0.4rem 0.65rem;">JPG</span>
+          <span class="btn btn-emerald" style="padding:0.45rem 0.75rem;">WhatsApp</span>
         </div>
 
-        <!-- Option 2: Direct Folder Write (File System Access API) -->
-        <div class="storage-option-card" onclick="saveDirectlyToStaminzerDirectory()">
+        <!-- Option 2: Native Android Share Sheet (Text / Other Apps) -->
+        <div class="storage-option-card" onclick="shareWorkoutTextSummary()">
           <div>
             <div class="storage-opt-title">
-              <svg class="icon" style="color:#34d399;" viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 10H6v-2h8v2zm4-4H6v-2h12v2z"/></svg>
-              Auto-Create <span class="folder-path-code">staminzer</span> Folder on Device
+              <svg class="icon" style="color:#38bdf8;" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+              Share / Copy Routine Text
             </div>
             <div class="storage-opt-desc">
-              Pick any storage location; automatically creates the <code style="color:#34d399;">staminzer</code> subfolder and saves the JPG inside it.
+              Invoke system share sheet or copy formatted workout text to clipboard.
             </div>
           </div>
-          <span class="btn btn-emerald" style="padding:0.4rem 0.65rem;">Folder</span>
+          <span class="btn btn-secondary" style="padding:0.4rem 0.65rem;">Share Text</span>
         </div>
 
-        <!-- Option 3: Download staminzer/ ZIP Folder Package -->
-        <div class="storage-option-card" onclick="downloadStaminzerFolderZip()">
-          <div>
-            <div class="storage-opt-title">
-              <svg class="icon" style="color:#38bdf8;" viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-2 6h-2v2h2v2h-2v2h-2v-2h2v-2h-2v-2h2v-2h-2V8h2v2h2v2z"/></svg>
-              Download <span class="folder-path-code">staminzer/</span> Folder Pack (.ZIP)
-            </div>
-            <div class="storage-opt-desc">
-              Packages the JPG card + printable HTML inside a ready-to-extract <code style="color:#38bdf8;">staminzer/</code> folder archive for Android File Manager.
-            </div>
-          </div>
-          <span class="btn btn-secondary" style="padding:0.4rem 0.65rem;">.ZIP</span>
+        <!-- Option 3: Save Image / Print PDF -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:0.65rem;">
+          <button class="btn btn-amber" style="width:100%; justify-content:center; padding:0.6rem;" onclick="downloadNativeJPG()">
+            Save JPG (<span id="previewJpgFileName" style="display:none;"></span>staminzer)
+          </button>
+          <button class="btn btn-primary" style="width:100%; justify-content:center; padding:0.6rem;" onclick="closeStaminzerExportModal(); triggerNativePrint();">
+            Print / Save PDF
+          </button>
         </div>
 
-        <!-- Option 4: Native Android Share Sheet -->
-        <div class="storage-option-card" onclick="shareRoutineOnAndroid()">
-          <div>
-            <div class="storage-opt-title">
-              <svg class="icon" style="color:#f43f5e;" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
-              Share / Send to WhatsApp or Gallery
-            </div>
-            <div class="storage-opt-desc">
-              Opens native Android Share sheet to send the <code style="color:#fda4af;">staminzer</code> workout image directly to the member.
-            </div>
+        <!-- Live Rendered Image Preview (Allows Long-Press -> Share Image in all Android APK WebViews) -->
+        <div class="card-preview-frame">
+          <div style="font-size:0.72rem; color:#fde047; margin-bottom:0.45rem; font-weight:700;">
+            💡 <b>Android App Tip:</b> Long-press the workout card image below and tap <b>"Share image"</b> to send the picture directly!
           </div>
-          <span class="btn btn-primary" style="padding:0.4rem 0.65rem;">Share</span>
+          <img id="liveGeneratedCardImg" alt="Staminizer Member Workout Card" src="" />
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeStaminzerExportModal()">Cancel</button>
+        <button class="btn btn-secondary" onclick="closeStaminzerExportModal()">Close</button>
       </div>
     </div>
   </div>
@@ -1771,6 +1844,43 @@
     let customExercises = {};
     let searchQuery = "";
     let collapsedMuscles = {}; // Keeps Android screen clutter-free
+    let currentAppView = "workout"; // 'workout' | 'member' | 'summary'
+
+    function switchAppView(viewName) {
+      currentAppView = viewName;
+
+      // Toggle main sections
+      document.getElementById('viewWorkoutSection').classList.toggle('active-view', viewName === 'workout');
+      document.getElementById('viewMemberSection').classList.toggle('active-view', viewName === 'member');
+      document.getElementById('viewSummarySection').classList.toggle('active-view', viewName === 'summary');
+
+      // Update Top Tab buttons
+      document.getElementById('topTabWorkout').classList.toggle('active', viewName === 'workout');
+      document.getElementById('topTabMember').classList.toggle('active', viewName === 'member');
+      document.getElementById('topTabSummary').classList.toggle('active', viewName === 'summary');
+
+      // Update Android Bottom Nav buttons
+      document.getElementById('bottomNavWorkout').classList.toggle('active-nav', viewName === 'workout');
+      document.getElementById('bottomNavMember').classList.toggle('active-nav', viewName === 'member');
+      document.getElementById('bottomNavSummary').classList.toggle('active-nav', viewName === 'summary');
+
+      if (viewName === 'summary') {
+        renderInlineSummaryView();
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderInlineSummaryView() {
+      const container = document.getElementById('inlineWeeklySummaryContainer');
+      if (container) {
+        container.innerHTML = generateWeeklySummaryHTML();
+      }
+      try {
+        const { canvas } = buildWorkoutCanvas();
+        const img = document.getElementById('inlineSummaryCardImg');
+        if (img) img.src = canvas.toDataURL('image/jpeg', 0.95);
+      } catch (e) {}
+    }
 
     function initApp() {
       const savedRoutine = localStorage.getItem("staminizer_routine_offline");
@@ -1808,7 +1918,7 @@
 
       syncAccordionDefaultsForDay();
       onBodyTypeChanged();
-      updateMemberQuickBar();
+      updateMemberBadges();
       renderDayTabs();
       renderFilterChips();
       renderMuscleColumns();
@@ -1878,21 +1988,20 @@
       persistData();
     }
 
-    function updateMemberQuickBar() {
+    function updateMemberBadges() {
       const name = document.getElementById('member_name').value.trim() || 'Member';
       document.title = `${name} - Staminizer Gym Workout Matrix`;
-      document.getElementById('quickMemberNameDisplay').textContent = name;
+
+      const firstName = name.split(/\s+/)[0] || 'Member';
+      const badgeEl = document.getElementById('topTabMemberBadge');
+      if (badgeEl) badgeEl.textContent = firstName.slice(0, 10);
 
       const parts = name.split(/\s+/).filter(Boolean);
       const initials = parts.length >= 2
         ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
         : name.slice(0, 2).toUpperCase();
-      document.getElementById('quickMemberInitials').textContent = initials;
-    }
-
-    function scrollToMemberProfile() {
-      const el = document.getElementById('memberProfileSection');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      const avatarEl = document.getElementById('memberAvatarInitials');
+      if (avatarEl) avatarEl.textContent = initials;
     }
 
     function persistData() {
@@ -2263,17 +2372,58 @@
       document.getElementById('previewModal').classList.remove('show');
     }
 
-    // Modal 2: staminzer Folder Export Hub
+    // Modal 2: Share & APK Card Preview Hub
     function openStaminzerExportModal() {
-      const memberName = document.getElementById('member_name').value.trim() || 'Member';
+      const { canvas, memberName } = buildWorkoutCanvas();
       const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
       document.getElementById('exportMemberNameLabel').textContent = memberName;
-      document.getElementById('previewJpgFileName').textContent = `staminzer/Staminizer_Workout_${cleanName}.jpg`;
+      document.getElementById('previewJpgFileName').textContent = `staminzer_${cleanName}.jpg`;
+
+      try {
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+        const previewImg = document.getElementById('liveGeneratedCardImg');
+        if (previewImg) previewImg.src = dataUrl;
+      } catch (e) {}
+
       document.getElementById('staminzerExportModal').classList.add('show');
     }
 
     function closeStaminzerExportModal() {
       document.getElementById('staminzerExportModal').classList.remove('show');
+    }
+
+    // Primary 1-Tap Direct Share Action (Attempts Native Android Image Share immediately, opens Share Hub with Live Preview if WebView blocks file blobs)
+    async function shareRoutineJPG() {
+      const { canvas, memberName } = buildWorkoutCanvas();
+      const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
+      const fileName = `staminzer_${cleanName}.jpg`;
+
+      try {
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
+        if (blob && window.File && navigator.share) {
+          const file = new File([blob], fileName, { type: 'image/jpeg' });
+          if (!navigator.canShare || navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              title: `Staminizer Workout - ${memberName}`,
+              text: `Staminizer Gym Workout Matrix for Member: ${memberName} (Helpline: 6296306487)`,
+              files: [file]
+            });
+            showToast("Routine card shared!");
+            return;
+          }
+        }
+      } catch (err) {
+        if (err && err.name === 'AbortError') return;
+      }
+
+      // Fallback for GitHub Android APK WebViews that block binary file blobs in navigator.share
+      openStaminzerExportModal();
+    }
+
+    function shareViaWhatsAppDirect() {
+      const text = buildWorkoutTextSummary();
+      const waUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      window.open(waUrl, '_blank');
     }
 
     // Build Formatted HTML for Preview & Print (Updated with Member's Name)
@@ -2371,7 +2521,7 @@
 
     // 100% OFFLINE NATIVE PRINT / PDF
     function triggerNativePrint() {
-      updateMemberQuickBar();
+      updateMemberBadges();
       const container = document.getElementById('printContainer');
       container.innerHTML = generateWeeklySummaryHTML();
       window.print();
@@ -2614,88 +2764,109 @@
       return { canvas, memberName };
     }
 
-    // Mode 1: Direct Download with staminzer/ path prefix
+    // Direct Save with staminzer prefix
     function downloadNativeJPG() {
-      closeStaminzerExportModal();
       const { canvas, memberName } = buildWorkoutCanvas();
       try {
         const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
         const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
+        const fileName = `staminzer_Workout_${cleanName}.jpg`;
+
         const link = document.createElement('a');
-        link.download = `staminzer/Staminizer_Workout_${cleanName}.jpg`;
+        link.download = fileName;
         link.href = dataUrl;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        showToast(`Saved to staminzer/Staminizer_Workout_${cleanName}.jpg`);
+        showToast(`Saved ${fileName}!`);
       } catch (e) {
         console.error("Canvas export error:", e);
-        showToast("Canvas export error.");
+        showToast("Long-press the preview image below to save.");
       }
     }
 
-    // Mode 2: Auto-create real "staminzer" folder via File System Access API (or fallback to ZIP folder)
-    async function saveDirectlyToStaminzerDirectory() {
-      closeStaminzerExportModal();
-      const { canvas, memberName } = buildWorkoutCanvas();
-      const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
-      const fileName = `Staminizer_Workout_${cleanName}.jpg`;
+    // Build Plain-Text Routine Summary for WhatsApp / SMS Sharing (Works in 100% of Android APK WebViews)
+    function buildWorkoutTextSummary() {
+      const memberName = document.getElementById('member_name').value.trim() || 'Member';
+      const age = document.getElementById('member_age').value || '-';
+      const height = document.getElementById('member_height').value || '-';
+      const weight = document.getElementById('member_weight').value || '-';
+      const bodytype = document.getElementById('member_bodytype').value || 'Mesomorph';
+      const goal = document.getElementById('member_goal').value || 'Fitness';
 
-      if ('showDirectoryPicker' in window) {
+      let lines = [];
+      lines.push(`🏋️ *STAMINIZER WORKOUT MATRIX*`);
+      lines.push(`📍 Nazrul Ashrampara, Near Maya Nursing Home, Siliguri 734001`);
+      lines.push(`📞 Helpline: 6296306487`);
+      lines.push(`────────────────────`);
+      lines.push(`👤 *Member's Name:* ${memberName}`);
+      lines.push(`📊 *Bio:* ${age} yrs | ${height} | ${weight}`);
+      lines.push(`🧬 *Body Type:* ${bodytype}`);
+      lines.push(`🎯 *Goal:* ${goal}`);
+      lines.push(`────────────────────`);
+
+      DAYS.forEach(day => {
+        let dayEx = [];
+        MUSCLE_GROUPS.forEach(m => {
+          const list = routineData[day.id]?.[m.id] || {};
+          Object.keys(list).forEach(name => {
+            if (list[name]?.enabled) {
+              dayEx.push(`  • [${m.name}] ${name} — *${list[name].sets} sets × ${list[name].reps}*`);
+            }
+          });
+        });
+
+        if (dayEx.length > 0) {
+          lines.push(`\n📅 *${day.name.toUpperCase()}*`);
+          lines.push(...dayEx);
+        } else {
+          lines.push(`\n📅 *${day.name.toUpperCase()}:* Rest & Recovery`);
+        }
+      });
+
+      lines.push(`\n────────────────────`);
+      lines.push(`⚡ *Staminizer Gym* • Consistency & Progressive Overload`);
+      return lines.join('\n');
+    }
+
+    async function shareWorkoutTextSummary() {
+      const text = buildWorkoutTextSummary();
+      const memberName = document.getElementById('member_name').value.trim() || 'Member';
+
+      if (navigator.share) {
         try {
-          const parentDirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
-          const staminzerFolderHandle = await parentDirHandle.getDirectoryHandle('staminzer', { create: true });
-          const fileHandle = await staminzerFolderHandle.getFileHandle(fileName, { create: true });
-          const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
-          const writable = await fileHandle.createWritable();
-          await writable.write(blob);
-          await writable.close();
-          showToast(`Saved inside staminzer/${fileName}!`);
+          await navigator.share({
+            title: `Staminizer Workout - ${memberName}`,
+            text: text
+          });
+          showToast("Shared workout text summary!");
           return;
         } catch (err) {
           if (err.name === 'AbortError') return;
         }
       }
-      // Fallback for mobile browsers where showDirectoryPicker is restricted: download real staminzer/ ZIP folder
-      downloadStaminzerFolderZip();
+
+      // Fallback: Copy to clipboard for instant pasting into WhatsApp
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast("Routine copied! Paste directly into WhatsApp.");
+      } catch (e) {
+        showToast("Could not copy text.");
+      }
+      document.body.removeChild(ta);
     }
 
-    // Mode 3: Pure-JS Offline ZIP Builder that creates a genuine "staminzer/" directory containing the JPG & HTML card
-    async function downloadStaminzerFolderZip() {
-      closeStaminzerExportModal();
-      showToast("Packaging staminzer/ folder...");
-      const { canvas, memberName } = buildWorkoutCanvas();
-      const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
-
-      const jpgBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
-      const jpgBuffer = new Uint8Array(await jpgBlob.arrayBuffer());
-
-      const htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${memberName} - Staminizer Routine</title></head><body style="background:#090d16;color:#fff;font-family:sans-serif;padding:20px;">${generateWeeklySummaryHTML()}</body></html>`;
-      const htmlBuffer = new TextEncoder().encode(htmlContent);
-
-      const files = [
-        { name: `staminzer/Staminizer_Workout_${cleanName}.jpg`, data: jpgBuffer },
-        { name: `staminzer/Staminizer_Summary_${cleanName}.html`, data: htmlBuffer }
-      ];
-
-      const zipBlob = buildUncompressedZip(files);
-      const url = URL.createObjectURL(zipBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `staminzer_${cleanName}.zip`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 4000);
-      showToast(`Downloaded staminzer/ folder archive!`);
-    }
-
-    // Mode 4: Native Android Share Sheet (Share JPG directly to Gallery / WhatsApp / File Manager)
+    // Native Android Share Sheet (Share JPG directly to WhatsApp / Gallery / File Manager)
     async function shareRoutineOnAndroid() {
-      closeStaminzerExportModal();
       const { canvas, memberName } = buildWorkoutCanvas();
       const cleanName = memberName.replace(/[^a-zA-Z0-9]/g, '_');
-      const fileName = `Staminizer_Workout_${cleanName}.jpg`;
+      const fileName = `staminzer_Workout_${cleanName}.jpg`;
 
       try {
         const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
@@ -2703,100 +2874,18 @@
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           await navigator.share({
             title: `Staminizer Workout - ${memberName}`,
-            text: `Staminizer Gym Workout Matrix for ${memberName} (Folder: staminzer/)`,
+            text: `Staminizer Gym Workout Matrix for Member: ${memberName} (Tel: 6296306487)`,
             files: [file]
           });
           showToast("Shared routine card!");
-        } else {
-          downloadNativeJPG();
+          return;
         }
       } catch (err) {
-        if (err.name !== 'AbortError') {
-          downloadNativeJPG();
-        }
-      }
-    }
-
-    // Lightweight 100% Offline Uncompressed ZIP Archive Generator (Creates `staminzer/` folder structure)
-    function buildUncompressedZip(files) {
-      const crcTable = new Uint32Array(256);
-      for (let i = 0; i < 256; i++) {
-        let c = i;
-        for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
-        crcTable[i] = c >>> 0;
-      }
-      function crc32(buf) {
-        let crc = 0xFFFFFFFF;
-        for (let i = 0; i < buf.length; i++) {
-          crc = crcTable[(crc ^ buf[i]) & 0xFF] ^ (crc >>> 8);
-        }
-        return (crc ^ 0xFFFFFFFF) >>> 0;
+        if (err.name === 'AbortError') return;
       }
 
-      const localHeaders = [];
-      const centralHeaders = [];
-      let offset = 0;
-
-      files.forEach(file => {
-        const nameBytes = new TextEncoder().encode(file.name);
-        const crc = crc32(file.data);
-        const size = file.data.length;
-
-        const localHeader = new Uint8Array(30 + nameBytes.length);
-        const lv = new DataView(localHeader.buffer);
-        lv.setUint32(0, 0x04034b50, true);
-        lv.setUint16(4, 20, true);
-        lv.setUint16(6, 0, true);
-        lv.setUint16(8, 0, true);
-        lv.setUint16(10, 0, true);
-        lv.setUint16(12, 0, true);
-        lv.setUint32(14, crc, true);
-        lv.setUint32(18, size, true);
-        lv.setUint32(22, size, true);
-        lv.setUint16(26, nameBytes.length, true);
-        lv.setUint16(28, 0, true);
-        localHeader.set(nameBytes, 30);
-
-        localHeaders.push(localHeader, file.data);
-
-        const centralHeader = new Uint8Array(46 + nameBytes.length);
-        const cv = new DataView(centralHeader.buffer);
-        cv.setUint32(0, 0x02014b50, true);
-        cv.setUint16(4, 20, true);
-        cv.setUint16(6, 20, true);
-        cv.setUint16(8, 0, true);
-        cv.setUint16(10, 0, true);
-        cv.setUint16(12, 0, true);
-        cv.setUint16(14, 0, true);
-        cv.setUint32(16, crc, true);
-        cv.setUint32(20, size, true);
-        cv.setUint32(24, size, true);
-        cv.setUint16(28, nameBytes.length, true);
-        cv.setUint16(30, 0, true);
-        cv.setUint16(32, 0, true);
-        cv.setUint16(34, 0, true);
-        cv.setUint16(36, 0, true);
-        cv.setUint32(38, 0, true);
-        cv.setUint32(42, offset, true);
-        centralHeader.set(nameBytes, 46);
-
-        centralHeaders.push(centralHeader);
-        offset += localHeader.length + size;
-      });
-
-      const centralSize = centralHeaders.reduce((acc, b) => acc + b.length, 0);
-      const eocd = new Uint8Array(22);
-      const ev = new DataView(eocd.buffer);
-      ev.setUint32(0, 0x06054b50, true);
-      ev.setUint16(4, 0, true);
-      ev.setUint16(6, 0, true);
-      ev.setUint16(8, files.length, true);
-      ev.setUint16(10, files.length, true);
-      ev.setUint32(12, centralSize, true);
-      ev.setUint32(16, offset, true);
-      ev.setUint16(20, 0, true);
-
-      return new Blob([...localHeaders, ...centralHeaders, eocd], { type: 'application/zip' });
+      // Fallback if the APK wrapper doesn't support binary file sharing: try text share or direct image save
+      showToast("Tip: Long-press the preview image below to Share/Save in your APK!");
     }
 
     // Canvas Rounded Rectangle helper
